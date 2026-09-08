@@ -14,18 +14,18 @@ async function startServer() {
     // Test Gmail SMTP connection
     await verifyEmailTransport();
 
-    const server = app.listen(env.port, () => {
-      console.log(`
+    const server = app.listen(env.port, "0.0.0.0", () => {
+  console.log(`
 ╔════════════════════════════════════════════╗
 ║         PalitpurConnect Backend            ║
 ╠════════════════════════════════════════════╣
 ║ Environment : ${env.nodeEnv}
-║ Server      : http://localhost:${env.port}
-║ API         : http://localhost:${env.port}/api/v1
-║ Health      : http://localhost:${env.port}/api/v1/health
+║ Server      : http://0.0.0.0:${env.port}
+║ API         : http://0.0.0.0:${env.port}/api/v1
+║ Health      : http://0.0.0.0:${env.port}/api/v1/health
 ╚════════════════════════════════════════════╝
-      `);
-    });
+  `);
+});
 
     const shutdown = async () => {
       console.log("\nShutting down server...");
