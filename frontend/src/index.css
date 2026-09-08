@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --radius: 0.875rem;
+  --background: #fdfbf7;
+  --foreground: #11221c;
+  --card: #ffffff;
+  --card-foreground: #11221c;
+  --primary: #2e7d5b;
+  --primary-foreground: #ffffff;
+  --secondary: #f0f7f3;
+  --secondary-foreground: #1c3b2b;
+  --muted: #f4f7f5;
+  --muted-foreground: #5a736a;
+  --accent: #d4a373;
+  --accent-foreground: #1c1409;
+  --border: #e1ebe6;
+  
+  --night: #091512;
+  --night-soft: #122420;
+  --night-foreground: #f4f7f5;
+  --night-muted: #9fb3ad;
+  --leaf: #2e7d5b;
+  --leaf-soft: #e8f5ec;
+  --harvest: #d4a373;
+  --clay: #b88654;
+  --sand: #fefae0;
+
+  --gradient-leaf: linear-gradient(135deg, var(--leaf), #1f523c);
+  --gradient-harvest: linear-gradient(135deg, var(--harvest), var(--clay));
+  --gradient-night: linear-gradient(160deg, var(--night) 0%, #122420 55%, #091512 100%);
+
+  --shadow-soft: 0 1px 2px rgba(17, 34, 28, 0.06), 0 12px 28px -18px rgba(17, 34, 28, 0.28);
+  --shadow-lift: 0 24px 50px -24px rgba(17, 34, 28, 0.35);
+  --shadow-glow: 0 30px 70px -30px rgba(46, 125, 91, 0.55);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--leaf);
+    color: var(--night-foreground);
+  }
+}
+
+.page-x {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 84rem;
+  padding-inline: 1.5rem;
+}
+
+.display {
+  font-family: Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.surface-night {
+  background: var(--gradient-night);
+  color: var(--night-foreground);
+}
+
+.text-gradient-leaf {
+  background: linear-gradient(100deg, var(--leaf), #74c69d, var(--harvest));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.grain {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.card-lift {
+  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 400ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 400ms ease;
+}
+
+.section-card {
+  position: relative;
+  border-radius: 2.25rem;
+  border: 1px solid var(--border);
+  background-color: var(--card);
+  color: var(--card-foreground);
+  padding: 2.5rem 1.5rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.section-card-night {
+  position: relative;
+  border-radius: 2.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgba(9, 21, 18, 0.55);
+  color: var(--night-foreground);
+  padding: 2.5rem 1.5rem;
+  box-shadow: var(--shadow-lift);
+  backdrop-filter: blur(18px);
+}
+
+@media (min-width: 1024px) {
+  .section-card,
+  .section-card-night {
+    padding: 3.5rem 3rem;
+  }
+}
+
+/* Floating Animations */
+@keyframes drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, -22px, 0) rotate(6deg); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(14px, 18px, 0) rotate(-8deg); }
+}
+@keyframes drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-16px, -14px, 0) scale(1.08); }
+}
+
+.float-a { animation: drift-a 13s ease-in-out infinite; }
+.float-b { animation: drift-b 17s ease-in-out infinite; }
+.float-c { animation: drift-c 15s ease-in-out infinite; }
+
+
+.backdrop-blur-xl {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.backdrop-blur-lg {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
