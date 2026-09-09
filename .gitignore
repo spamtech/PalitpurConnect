@@ -1,0 +1,50 @@
+# Dependencies (root and nested backend/frontend folders)
+node_modules/
+**/node_modules/
+
+# Environment files & Secrets (covers root, backend, and frontend .env files)
+.env
+**/.env
+.env.local
+**/.env.local
+.env.*
+**/.env.*
+
+# Build outputs & distribution folders
+dist/
+**/dist/
+build/
+**/build/
+.output/
+
+# Logs and runtime data
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage reports
+coverage/
+*.lcov
+.nyc_output/
+
+# Editor and IDE configurations
+.vscode/
+.idea/
+*.suo
+*.sln
+*.sw?
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

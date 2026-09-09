@@ -24,6 +24,7 @@ import EmergencyAdmin from "../pages/admin/EmergencyAdmin";
 import GrievancesAdmin from "../pages/admin/GrievancesAdmin";
 import AdminLandingEditor from "../pages/admin/AdminLandingEditor";
 import HistoryPage from "../pages/admin/LandingHistory";
+import AdminUsersPage from "../pages/admin/AdminUsersPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -201,17 +202,26 @@ export default function AppRoutes() {
       />
 
       <Route
-  path="/admin/landing/history"
-  element={
-    <ProtectedRoute allowedRoles={ADMIN}>
-      <AdminLayout>
-        <HistoryPage />
-      </AdminLayout>
-    </ProtectedRoute>
-  }
-/>
+        path="/admin/landing/history"
+        element={
+          <ProtectedRoute allowedRoles={ADMIN}>
+            <AdminLayout>
+              <HistoryPage />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
 
-      
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute allowedRoles={ADMIN}>
+            <AdminLayout>
+              <AdminUsersPage />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
 
       {/* ================= FALLBACK ================= */}
 

@@ -35,7 +35,7 @@ export default function CitizenLogin() {
     const trimmedEmail = email.trim().toLowerCase();
 
     if (!trimmedEmail || !password) {
-      setError("Please enter your email and password.");
+      setError("দয়া করে আপনার ইমেল এবং পাসওয়ার্ড লিখুন।");
       return;
     }
 
@@ -57,7 +57,7 @@ export default function CitizenLogin() {
 
       setError(
         error.message ||
-          "Unable to sign in. Please check your credentials."
+          "লগইন করতে ব্যর্থ হয়েছে। আপনার শংসাপত্রগুলি যাচাই করুন।"
       );
     } finally {
       setLoading(false);
@@ -65,63 +65,65 @@ export default function CitizenLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-teal-950 to-slate-950 relative isolate overflow-hidden">
-      {/* Ambient background glows */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute left-[-10%] top-[-15%] h-[500px] w-[500px] rounded-full bg-gradient-to-br from-amber-500/20 via-emerald-500/20 to-transparent blur-3xl animate-pulse" />
-        <div className="absolute right-[-10%] top-[10%] h-[600px] w-[600px] rounded-full bg-gradient-to-bl from-teal-500/20 via-emerald-500/10 to-amber-500/20 blur-3xl" />
+    <div className="min-h-screen bg-[#173528] text-[#f7f0d0] relative isolate overflow-hidden">
+      {/* Retro ambient background */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#b8d85a]/10 blur-3xl" />
+        <div className="absolute -right-24 top-0 h-96 w-96 rounded-full bg-[#6f9f43]/10 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e6ad45]/10 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(#f7f0d0_1px,transparent_1px)] [background-size:12px_12px]" />
       </div>
 
       <div className="grid min-h-screen lg:grid-cols-12">
         {/* =====================================================
             LEFT BRANDING PANEL (5 cols)
         ====================================================== */}
-        <div className="relative hidden overflow-hidden lg:col-span-5 lg:flex border-r border-emerald-900/40 bg-slate-950/40 backdrop-blur-md">
+        <div className="relative hidden overflow-hidden lg:col-span-5 lg:flex border-r-[3px] border-[#0c2218] bg-[#10281e]">
           <div className="relative flex w-full flex-col justify-between p-12 xl:p-16">
             <Link
               to="/"
-              className="inline-flex items-center gap-2.5 text-xs font-bold text-amber-300 transition hover:text-white w-fit rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2"
+              className="inline-flex items-center gap-2.5 text-xs font-black text-[#173528] transition hover:bg-[#e6ad45] w-fit rounded-2xl border-[2px] border-[#0c2218] bg-[#b8d85a] px-4 py-2.5 shadow-[4px_4px_0_#0c2218]"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to PalitpurConnect
+              পালিতপুর কানেক্ট-এ ফিরে যান
             </Link>
 
             <div className="max-w-lg">
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-400 to-emerald-500 text-slate-950 shadow-lg shadow-amber-500/20">
+              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-[#0c2218] bg-[#b8d85a] text-[#173528] shadow-[4px_4px_0_#0c2218]">
                 <Sparkles className="h-7 w-7 animate-pulse" />
               </div>
 
-              <h1 className="text-4xl font-black tracking-tight text-white xl:text-5xl leading-[1.1]">
-                Welcome back to
-                <span className="block bg-gradient-to-r from-amber-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent mt-1">
-                  PalitpurConnect.
+              <h1 className="text-4xl font-black tracking-tight text-[#f7f0d0] xl:text-5xl leading-[1.1]">
+                স্বাগতম ফিরে আসায়
+                <span className="block text-[#b8d85a] mt-1">
+                  পালিতপুর কানেক্ট-এ।
                 </span>
               </h1>
 
-              <p className="mt-5 text-sm sm:text-base leading-relaxed text-slate-300">
-                Access village announcements, local services, emergency hotlines, and instant grievance status tracking from one unified digital platform.
+              <p className="mt-5 text-sm sm:text-base leading-relaxed text-[#dfe8c4]">
+                একটিমাত্র ডিজিটাল প্ল্যাটফর্ম থেকে গ্রামের ঘোষণা, স্থানীয় পরিষেবা, জরুরি হটলাইন এবং তাৎক্ষণিক অভিযোগের স্থিতি ট্র্যাক করুন।
               </p>
 
               <div className="mt-8 space-y-3.5">
-                <div className="flex items-center gap-3 text-sm font-semibold text-slate-200 bg-white/5 p-3 rounded-xl border border-white/10 backdrop-blur-xs">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
-                  Secure encrypted citizen login session
+                <div className="flex items-center gap-3 text-sm font-bold text-[#f7f0d0] bg-[#2d684d] p-3.5 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
+                  <CheckCircle2 className="h-5 w-5 text-[#b8d85a] shrink-0" />
+                  সুরক্ষিত এনক্রিপ্টেড নাগরিক লগইন সেশন
                 </div>
 
-                <div className="flex items-center gap-3 text-sm font-semibold text-slate-200 bg-white/5 p-3 rounded-xl border border-white/10 backdrop-blur-xs">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
-                  Instant access to active community tickets
+                <div className="flex items-center gap-3 text-sm font-bold text-[#f7f0d0] bg-[#2d684d] p-3.5 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
+                  <CheckCircle2 className="h-5 w-5 text-[#b8d85a] shrink-0" />
+                  সক্রিয় কমিউনিটি টিকেটগুলিতে তাত্ক্ষণিক অ্যাক্সেস
                 </div>
 
-                <div className="flex items-center gap-3 text-sm font-semibold text-slate-200 bg-white/5 p-3 rounded-xl border border-white/10 backdrop-blur-xs">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
-                  Panchayat verified administrator security
+                <div className="flex items-center gap-3 text-sm font-bold text-[#f7f0d0] bg-[#2d684d] p-3.5 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
+                  <CheckCircle2 className="h-5 w-5 text-[#b8d85a] shrink-0" />
+                  গ্রাম যাচাইকৃত প্রশাসক নিরাপত্তা
                 </div>
               </div>
             </div>
 
-            <p className="text-xs font-bold text-amber-300/80 tracking-wider">
-              Palitpur • Birbhum • West Bengal
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-[#e6ad45]">
+              পালিতপুর • বীরভূম • পশ্চিমবঙ্গ
             </p>
           </div>
         </div>
@@ -129,28 +131,28 @@ export default function CitizenLogin() {
         {/* =====================================================
             RIGHT LOGIN PANEL (7 cols)
         ====================================================== */}
-        <div className="flex items-center justify-center bg-white px-6 py-12 sm:px-12 lg:col-span-7">
-          <div className="w-full max-w-xl">
+        <div className="flex items-center justify-center bg-[#173528] px-6 py-12 sm:px-12 lg:col-span-7">
+          <div className="w-full max-w-xl rounded-[24px] border-[3px] border-[#0c2218] bg-[#f7f0d0] p-8 sm:p-10 text-[#173528] shadow-[10px_10px_0_rgba(12,34,24,0.3)]">
             {/* Mobile back */}
             <Link
               to="/"
-              className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-slate-900 lg:hidden"
+              className="mb-8 inline-flex items-center gap-2 text-xs font-black text-[#173528] transition hover:bg-[#e6ad45] rounded-2xl border-[2px] border-[#0c2218] bg-[#b8d85a] px-4 py-2.5 shadow-[4px_4px_0_#0c2218] lg:hidden"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to home
+              হোমে ফিরে যান
             </Link>
 
             <div className="mb-8">
-              <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold border border-emerald-200 text-emerald-700 shadow-xs">
-                SECURE ACCESS
+              <span className="inline-flex rounded-xl bg-[#2d684d] px-3.5 py-1 text-xs font-black border-2 border-[#0c2218] text-[#f7f0d0] shadow-[3px_3px_0_#0c2218] tracking-widest uppercase">
+                সুরক্ষিত অ্যাক্সেস
               </span>
 
-              <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
-                Citizen Login 🔑
+              <h2 className="mt-4 text-3xl font-black tracking-tight text-[#173528] sm:text-4xl">
+                নাগরিক লগইন 🔑
               </h2>
 
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                Sign in to your PalitpurConnect account to manage your requests.
+              <p className="mt-2 text-sm font-medium leading-relaxed text-[#42604e]">
+                আপনার অনুরোধগুলি পরিচালনা করতে আপনার পালিতপুর কানেক্ট অ্যাকাউন্টে সাইন ইন করুন।
               </p>
             </div>
 
@@ -160,7 +162,7 @@ export default function CitizenLogin() {
             >
               {/* Email */}
               <Input
-                label="Email address *"
+                label="ইমেল ঠিকানা *"
                 type="email"
                 placeholder="name@example.com"
                 value={email}
@@ -175,11 +177,11 @@ export default function CitizenLogin() {
               {/* Password */}
               <div className="relative">
                 <Input
-                  label="Password *"
+                  label="পাসওয়ার্ড *"
                   type={
                     showPassword ? "text" : "password"
                   }
-                  placeholder="Enter your account password"
+                  placeholder="আপনার অ্যাকাউন্ট পাসওয়ার্ড লিখুন"
                   value={password}
                   onChange={(event) =>
                     setPassword(event.target.value)
@@ -194,11 +196,11 @@ export default function CitizenLogin() {
                   onClick={() =>
                     setShowPassword((value) => !value)
                   }
-                  className="absolute right-3 top-[38px] rounded-lg p-1 text-slate-400 transition hover:text-slate-700"
+                  className="absolute right-3 top-[38px] rounded-xl border-2 border-[#173528] bg-[#b8d85a] p-1.5 text-[#173528] shadow-[2px_2px_0_#173528] transition hover:bg-[#e6ad45]"
                   aria-label={
                     showPassword
-                      ? "Hide password"
-                      : "Show password"
+                      ? "পাসওয়ার্ড লুকান"
+                      : "পাসওয়ার্ড দেখান"
                   }
                 >
                   {showPassword ? (
@@ -213,15 +215,15 @@ export default function CitizenLogin() {
               <div className="flex justify-end">
                 <Link
                   to="/forgot-password"
-                  className="text-xs sm:text-sm font-bold text-emerald-700 hover:text-amber-700 transition-colors"
+                  className="text-xs sm:text-sm font-bold text-[#2d684d] hover:text-[#b07820] transition-colors"
                 >
-                  Forgot password?
+                  পাসওয়ার্ড ভুলে গেছেন?
                 </Link>
               </div>
 
               {/* Error */}
               {error && (
-                <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700 shadow-xs">
+                <div className="rounded-2xl border-2 border-[#0c2218] bg-red-100 px-4 py-3 text-xs font-bold text-red-800 shadow-[4px_4px_0_#0c2218]">
                   {error}
                 </div>
               )}
@@ -229,11 +231,11 @@ export default function CitizenLogin() {
               {/* Submit */}
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-emerald-600 via-teal-700 to-emerald-800 font-bold py-3 shadow-lg shadow-emerald-700/20"
+                className="w-full rounded-2xl border-[2px] border-[#0c2218] bg-[#b8d85a] py-3 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] transition-all hover:-translate-y-0.5 hover:bg-[#e6ad45] hover:shadow-[5px_5px_0_#0c2218]"
                 loading={loading}
                 disabled={loading}
               >
-                Sign in to Portal
+                পোর্টালে সাইন ইন করুন
                 {!loading && (
                   <ArrowRight className="ml-2 h-4 w-4" />
                 )}
@@ -241,27 +243,27 @@ export default function CitizenLogin() {
             </form>
 
             {/* Register */}
-            <div className="mt-8 border-t border-slate-100 pt-6 text-center">
-              <p className="text-xs sm:text-sm text-slate-500">
-                Don't have a citizen account?{" "}
+            <div className="mt-8 border-t-2 border-[#173528]/15 pt-6 text-center">
+              <p className="text-xs sm:text-sm font-semibold text-[#42604e]">
+                কোনো নাগরিক অ্যাকাউন্ট নেই?{" "}
                 <Link
                   to="/register"
-                  className="font-bold text-emerald-700 hover:text-amber-600 transition-colors"
+                  className="font-black text-[#2d684d] hover:text-[#b07820] transition-colors"
                 >
-                  Create an account
+                  একটি অ্যাকাউন্ট তৈরি করুন
                 </Link>
               </p>
             </div>
 
             {/* Admin */}
             <div className="mt-4 text-center">
-              <p className="text-xs text-slate-400">
-                Are you a Panchayat administrator?{" "}
+              <p className="text-xs font-semibold text-[#58705e]">
+                আপনি কি একজন প্রশাসক?{" "}
                 <Link
                   to="/admin/login"
-                  className="font-bold text-slate-700 hover:text-emerald-700 transition-colors underline underline-offset-4"
+                  className="font-black text-[#173528] hover:text-[#2d684d] transition-colors underline underline-offset-4"
                 >
-                  Admin Login
+                  অ্যাডমিন লগইন
                 </Link>
               </p>
             </div>

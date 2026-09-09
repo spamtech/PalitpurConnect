@@ -22,26 +22,26 @@ import { Badge, Button, Card } from "../../components/ui";
 import { api } from "../../services/api";
 
 /* --------------------------------
-   Hero Metrics Component
+    Hero Metrics Component
 --------------------------------- */
 function HeroMetrics() {
   const metrics = [
     {
-      value: "24/7",
-      label: "Portal Access",
-      description: "Services available anytime",
+      value: "২৪/৭",
+      label: "পোর্টাল অ্যাক্সেস",
+      description: "যেকোনো সময় পরিষেবা উপলব্ধ",
       icon: Clock3,
     },
     {
-      value: "100%",
-      label: "Citizen Focused",
-      description: "Designed around local needs",
+      value: "১০০%",
+      label: "নাগরিক কেন্দ্রীক",
+      description: "স্থানীয় চাহিদার কথা মাথায় রেখে তৈরি",
       icon: Users,
     },
     {
-      value: "<24h",
-      label: "Issue Response",
-      description: "Target acknowledgement time",
+      value: "<২৪ ঘণ্টা",
+      label: "সমস্যার প্রতিক্রিয়া",
+      description: "স্বীকৃতি দেওয়ার নির্ধারিত সময়",
       icon: ShieldCheck,
     },
   ];
@@ -54,27 +54,25 @@ function HeroMetrics() {
         return (
           <div
             key={metric.label}
-            className="group relative overflow-hidden rounded-2xl border border-amber-200/60 bg-gradient-to-br from-white/90 via-emerald-50/30 to-amber-50/30 p-4 shadow-md backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-amber-400 hover:shadow-xl"
+            className="group relative overflow-hidden rounded-[20px] border-[2px] border-[#0c2218] bg-[#f7f0d0] p-4 shadow-[4px_4px_0_#0c2218] transition duration-300 hover:-translate-y-1 hover:bg-[#b8d85a] hover:shadow-[6px_6px_0_#0c2218]"
           >
-            <div className="absolute -right-6 -top-6 h-16 w-16 rounded-full bg-amber-400/10 blur-xl transition-all group-hover:bg-amber-400/20" />
-            
             <div className="flex items-start justify-between gap-3 relative z-10">
               <div>
-                <p className="text-2xl font-black tracking-tight text-slate-900 bg-gradient-to-r from-slate-900 to-emerald-950 bg-clip-text text-transparent">
+                <p className="text-2xl font-black tracking-tight text-[#173528]">
                   {metric.value}
                 </p>
 
-                <p className="mt-1 text-sm font-bold text-slate-800">
+                <p className="mt-1 text-sm font-black text-[#173528]">
                   {metric.label}
                 </p>
 
-                <p className="mt-1 text-xs leading-5 text-slate-600">
+                <p className="mt-1 text-xs leading-5 font-semibold text-[#42604e]">
                   {metric.description}
                 </p>
               </div>
 
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-md shadow-emerald-700/20 transition group-hover:scale-110 group-hover:from-amber-500 group-hover:to-amber-700">
-                <Icon size={18} />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-[#173528] bg-[#b8d85a] text-[#173528] shadow-[3px_3px_0_#0c2218] transition group-hover:bg-[#e6ad45]">
+                <Icon size={18} strokeWidth={2.5} />
               </div>
             </div>
           </div>
@@ -85,7 +83,7 @@ function HeroMetrics() {
 }
 
 /* --------------------------------
-   Live Activity Component (Backend Synced)
+    Live Activity Component (Backend Synced)
 --------------------------------- */
 function LiveActivity() {
   const [activities, setActivities] = useState([]);
@@ -102,17 +100,17 @@ function LiveActivity() {
         if (mounted) {
           const formatted = items.slice(0, 4).map((item, index) => ({
             id: item.id || index,
-            title: item.title || "Village Update",
-            description: item.description || "New official circular published.",
-            time: item.published_at || item.created_at ? new Date(item.published_at || item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Recent",
+            title: item.title || "গ্রামের আপডেট",
+            description: item.description || "নতুন অফিসিয়াল বিজ্ঞপ্তি প্রকাশিত হয়েছে।",
+            time: item.published_at || item.created_at ? new Date(item.published_at || item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "ਸমাত্র",
             icon: Megaphone,
-            status: item.category === "emergency" ? "New" : "Active",
+            status: item.category === "emergency" ? "নতুন" : "সক্রিয়",
           }));
 
           if (formatted.length === 0) {
             setActivities([
-              { id: 1, title: "Gram Sabha Notice", description: "Panchayat meeting scheduled for residents.", time: "Just now", icon: Megaphone, status: "New" },
-              { id: 2, title: "Water Supply Maintained", description: "Pipeline repair successfully completed.", time: "1 hr ago", icon: CheckCircle2, status: "Resolved" },
+              { id: 1, title: "গ্রামসভা নোটিশ", description: "বাসিন্দাদের জন্য পঞ্চায়েত সভার সময় নির্ধারিত হয়েছে।", time: "এই মাত্র", icon: Megaphone, status: "নতুন" },
+              { id: 2, title: "জল সরবরাহ রক্ষণাবেক্ষণ", description: "পাইপলাইন মেরামতের কাজ সফলভাবে সম্পন্ন হয়েছে।", time: "১ ঘণ্টা আগে", icon: CheckCircle2, status: "সমাধান হয়েছে" },
             ]);
           } else {
             setActivities(formatted);
@@ -122,7 +120,7 @@ function LiveActivity() {
         console.error("Failed to load live activity:", err);
         if (mounted) {
           setActivities([
-            { id: 1, title: "Panchayat Broadcast", description: "System operational and connected.", time: "Active", icon: Activity, status: "Live" }
+            { id: 1, title: "পঞ্চায়েত সম্প্রচার", description: "সিস্টেম চালু আছে এবং সংযুক্ত রয়েছে।", time: "সক্রিয়", icon: Activity, status: "লাইভ" }
           ]);
         }
       } finally {
@@ -135,44 +133,44 @@ function LiveActivity() {
   }, []);
 
   return (
-    <Card className="relative overflow-hidden border-amber-200/60 bg-white/90 p-0 shadow-2xl shadow-emerald-950/10 backdrop-blur-2xl">
-      <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 via-emerald-500 to-amber-500" />
+    <Card className="relative overflow-hidden rounded-[24px] border-[3px] border-[#0c2218] bg-[#f7f0d0] p-0 shadow-[10px_10px_0_rgba(12,34,24,0.3)] text-[#173528]">
+      <div className="h-2 w-full bg-[#0c2218]" />
 
       {/* Header */}
-      <div className="border-b border-slate-100 px-5 py-5 sm:px-6 bg-gradient-to-r from-emerald-900/5 via-amber-500/5 to-transparent">
+      <div className="border-b-[3px] border-[#0c2218] px-5 py-5 sm:px-6 bg-[#2d684d] text-[#f7f0d0]">
         <div className="flex items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
               <span className="relative flex h-3 w-3">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-amber-500" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#b8d85a] opacity-75" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-[#b8d85a]" />
               </span>
 
-              <span className="text-sm font-bold text-slate-900 tracking-wide">
-                Live Village Activity & Harvest
+              <span className="text-sm font-black text-[#f7f0d0] tracking-wide uppercase">
+                লাইভ গ্রামের কার্যকলাপ ও ফসল
               </span>
             </div>
 
-            <p className="mt-1 text-xs text-slate-500 font-medium">
-              Latest updates & community notices from Palitpur
+            <p className="mt-1 text-xs text-[#dfe8c4] font-semibold">
+              পালিতপুর থেকে সর্বশেষ আপডেট এবং কমিউনিটি বিজ্ঞপ্তি
             </p>
           </div>
 
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-600 text-white shadow-md shadow-amber-600/30">
-            <Sparkles size={20} />
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[#173528] bg-[#b8d85a] text-[#173528] shadow-[3px_3px_0_#0c2218]">
+            <Sparkles size={20} strokeWidth={2.5} />
           </div>
         </div>
       </div>
 
       {/* Activity List */}
-      <div className="divide-y divide-slate-100 min-h-[220px]">
+      <div className="divide-y-2 divide-[#0c2218]/15 min-h-[220px]">
         {loading ? (
           <div className="flex min-h-[220px] items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
+            <Loader2 className="h-6 w-6 animate-spin text-[#2d684d]" />
           </div>
         ) : activities.length === 0 ? (
-          <div className="px-6 py-10 text-center text-xs text-slate-500">
-            No recent activity notices found.
+          <div className="px-6 py-10 text-center text-xs font-bold text-[#42604e]">
+            কোনো সাম্প্রতিক কার্যকলাপ বিজ্ঞপ্তি পাওয়া যায়নি।
           </div>
         ) : (
           activities.map((activity) => {
@@ -181,46 +179,45 @@ function LiveActivity() {
             return (
               <div
                 key={activity.id}
-                className="group px-5 py-4 transition duration-300 hover:bg-emerald-50/50 sm:px-6"
+                className="group px-5 py-4 transition duration-300 hover:bg-[#b8d85a]/25 sm:px-6"
               >
                 <div className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 transition group-hover:bg-gradient-to-tr group-hover:from-emerald-600 group-hover:to-teal-600 group-hover:text-white group-hover:shadow-md">
-                    <Icon size={18} />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-[#173528] bg-[#b8d85a] text-[#173528] shadow-[3px_3px_0_#0c2218] transition group-hover:bg-[#e6ad45]">
+                    <Icon size={18} strokeWidth={2.5} />
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h3 className="text-sm font-bold text-slate-900 group-hover:text-emerald-800 transition-colors truncate max-w-[200px]">
+                      <h3 className="text-sm font-black text-[#173528] truncate max-w-[200px]">
                         {activity.title}
                       </h3>
 
-                      <Badge
-                        variant={
-                          activity.status === "Resolved"
-                            ? "success"
-                            : activity.status === "New"
-                              ? "info"
-                              : "warning"
-                        }
-                        size="sm"
+                      <span
+                        className={`rounded-xl px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider border-2 border-[#0c2218] shadow-[2px_2px_0_#0c2218] ${
+                          activity.status === "সমাধান হয়েছে"
+                            ? "bg-[#b8d85a] text-[#173528]"
+                            : activity.status === "নতুন"
+                            ? "bg-[#e6ad45] text-[#173528]"
+                            : "bg-[#2d684d] text-[#f7f0d0]"
+                        }`}
                       >
                         {activity.status}
-                      </Badge>
+                      </span>
                     </div>
 
-                    <p className="mt-1 text-xs leading-relaxed text-slate-600 line-clamp-2">
+                    <p className="mt-1 text-xs leading-relaxed font-medium text-[#42604e] line-clamp-2">
                       {activity.description}
                     </p>
 
-                    <div className="mt-2.5 flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
-                      <Clock3 size={12} className="text-amber-500" />
+                    <div className="mt-2.5 flex items-center gap-1.5 text-[11px] font-bold text-[#58705e]">
+                      <Clock3 size={12} className="text-[#b07820]" />
                       {activity.time}
                     </div>
                   </div>
 
                   <ArrowUpRight
                     size={17}
-                    className="mt-1 hidden shrink-0 text-slate-300 transition group-hover:text-amber-600 sm:block"
+                    className="mt-1 hidden shrink-0 text-[#173528] transition group-hover:translate-x-0.5 sm:block"
                   />
                 </div>
               </div>
@@ -230,18 +227,21 @@ function LiveActivity() {
       </div>
 
       {/* Footer */}
-      <div className="border-t border-slate-100 bg-gradient-to-r from-slate-50 via-emerald-50/30 to-slate-50 px-5 py-3.5 sm:px-6">
+      <div className="border-t-[3px] border-[#0c2218] bg-[#173528] px-5 py-3.5 sm:px-6 text-[#f7f0d0]">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse shadow-sm shadow-emerald-500" />
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#b8d85a] opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#b8d85a]" />
+            </span>
 
-            <span className="text-xs font-bold text-slate-700">
-              Systems operational & live sync active
+            <span className="text-xs font-black">
+              সিস্টেম সচল ও লাইভ সিঙ্ক সক্রিয় রয়েছে
             </span>
           </div>
 
-          <span className="text-xs font-bold text-amber-600 flex items-center gap-1">
-            <Sparkles size={12} /> Live DB
+          <span className="text-xs font-black text-[#e6ad45] flex items-center gap-1">
+            <Sparkles size={12} /> লাইভ ডিবি
           </span>
         </div>
       </div>
@@ -250,10 +250,23 @@ function LiveActivity() {
 }
 
 /* --------------------------------
-   Main Citizen Dashboard Component
+    Main Citizen Dashboard Component
 --------------------------------- */
 export default function CitizenDashboard() {
   const navigate = useNavigate();
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const { innerWidth, innerHeight } = window;
+      const x = (e.clientX / innerWidth - 0.5) * 30; // 30px max movement
+      const y = (e.clientY / innerHeight - 0.5) * 30;
+      setMousePos({ x, y });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   const scrollToGrievance = () => {
     const element = document.getElementById("grievance");
@@ -276,101 +289,105 @@ export default function CitizenDashboard() {
   return (
     <section
       id="home"
-      className="relative isolate overflow-hidden bg-gradient-to-b from-slate-50 via-white to-emerald-50/30 min-h-screen pb-16"
+      className="relative isolate overflow-hidden bg-[#173528] text-[#f7f0d0] min-h-screen pb-16 pt-24"
     >
-      {/* Floating Cultural & Sacred Floating Badges */}
-      <div className="absolute top-24 left-8 hidden lg:flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/90 border border-amber-300 shadow-xl backdrop-blur-md animate-bounce duration-1000 z-20">
-        <span className="text-amber-600 font-extrabold text-sm">卐</span>
-        <span className="text-xs font-bold text-slate-800 tracking-wide">Shubh Labh</span>
+      {/* Retro ambient background */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#b8d85a]/10 blur-3xl" />
+        <div className="absolute -right-24 top-0 h-96 w-96 rounded-full bg-[#6f9f43]/10 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e6ad45]/10 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(#f7f0d0_1px,transparent_1px)] [background-size:12px_12px]" />
       </div>
 
-      <div className="absolute top-44 right-10 hidden lg:flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/90 border border-orange-300 shadow-xl backdrop-blur-md animate-pulse z-20">
-        <span className="text-orange-600 font-extrabold text-base">ॐ</span>
-        <span className="text-xs font-bold text-slate-800 tracking-wide">Om Shanti</span>
-      </div>
-
-      <div className="absolute bottom-28 left-12 hidden lg:flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-emerald-300 shadow-lg backdrop-blur-md z-20">
-        <Wheat size={18} className="text-amber-600" />
-        <span className="text-xs font-bold text-slate-800 tracking-wide">Golden Harvest</span>
-      </div>
-
-      <div className="absolute bottom-20 right-14 hidden lg:flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-emerald-300 shadow-lg backdrop-blur-md z-20">
-        <Sprout size={18} className="text-emerald-600 animate-pulse" />
-        <span className="text-xs font-bold text-slate-800 tracking-wide">Paddy & Crops</span>
-      </div>
-
-      {/* Ambient Background Glows */}
+      {/* Floating Cultural & Sacred Badges moving with mouse */}
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+        style={{ transform: `translate(${mousePos.x * 0.8}px, ${mousePos.y * 0.8}px)` }}
+        className="absolute top-28 left-8 hidden lg:flex items-center gap-2.5 px-4 py-2 rounded-2xl border-[2px] border-[#0c2218] bg-[#f7f0d0] text-[#173528] shadow-[4px_4px_0_#0c2218] z-20 transition-transform duration-150 ease-out"
       >
-        <div className="absolute left-[-10%] top-[-15%] h-[500px] w-[500px] rounded-full bg-gradient-to-br from-amber-200/40 via-emerald-200/50 to-transparent blur-3xl animate-pulse" />
-        <div className="absolute right-[-10%] top-[10%] h-[600px] w-[600px] rounded-full bg-gradient-to-bl from-teal-200/50 via-emerald-100/60 to-amber-100/30 blur-3xl" />
-        <div className="absolute bottom-[-20%] left-[30%] h-[450px] w-[450px] rounded-full bg-gradient-to-tr from-amber-100/60 to-green-50 blur-3xl" />
+        <span className="text-[#b07820] font-black text-sm">卐</span>
+        <span className="text-xs font-black tracking-wide">শুভ লাভ</span>
       </div>
 
-      {/* Grid Background Pattern */}
       <div
-        aria-hidden="true"
-        className="radial-grid pointer-events-none absolute inset-0 -z-10 opacity-70"
-      />
+        style={{ transform: `translate(${mousePos.x * -0.6}px, ${mousePos.y * -0.6}px)` }}
+        className="absolute top-48 right-10 hidden lg:flex items-center gap-2.5 px-4 py-2 rounded-2xl border-[2px] border-[#0c2218] bg-[#f7f0d0] text-[#173528] shadow-[4px_4px_0_#0c2218] z-20 transition-transform duration-150 ease-out"
+      >
+        <span className="text-[#e6ad45] font-black text-base">ॐ</span>
+        <span className="text-xs font-black tracking-wide">ওম শান্তি</span>
+      </div>
 
-      <div className="px-6 pb-20 pt-32 sm:px-12 sm:pb-24 lg:px-16 lg:pt-36">
+      <div
+        style={{ transform: `translate(${mousePos.x * -1}px, ${mousePos.y * -1}px)` }}
+        className="absolute bottom-28 left-12 hidden lg:flex items-center gap-2 px-4 py-2 rounded-2xl border-[2px] border-[#0c2218] bg-[#f7f0d0] text-[#173528] shadow-[4px_4px_0_#0c2218] z-20 transition-transform duration-150 ease-out"
+      >
+        <Wheat size={18} className="text-[#b07820]" strokeWidth={2.5} />
+        <span className="text-xs font-black tracking-wide">সোনালী ফসল</span>
+      </div>
+
+      <div
+        style={{ transform: `translate(${mousePos.x * 1.2}px, ${mousePos.y * 1.2}px)` }}
+        className="absolute bottom-20 right-14 hidden lg:flex items-center gap-2 px-4 py-2 rounded-2xl border-[2px] border-[#0c2218] bg-[#f7f0d0] text-[#173528] shadow-[4px_4px_0_#0c2218] z-20 transition-transform duration-150 ease-out"
+      >
+        <Sprout size={18} className="text-[#2d684d]" strokeWidth={2.5} />
+        <span className="text-xs font-black tracking-wide">ধান ও ফসল</span>
+      </div>
+
+      <div className="px-6 pb-20 pt-16 sm:px-12 sm:pb-24 lg:px-16">
         <div className="mx-auto max-w-[1600px]">
           <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
 
             {/* LEFT SIDE */}
             <div className="lg:col-span-7">
 
-              <Badge variant="success" className="mb-6 px-4 py-1.5 shadow-sm border border-emerald-200/80 bg-gradient-to-r from-emerald-50 to-amber-50">
-                <span className="mr-2 inline-block h-2.5 w-2.5 animate-ping rounded-full bg-amber-500 shadow-sm shadow-amber-500" />
-                <span className="font-bold text-emerald-900">Palitpur Gram </span> 
-                <span className="mx-1.5 text-amber-600 font-bold">•</span> 
-                <span className="text-slate-700 font-medium">Digital Civic Portal</span>
-              </Badge>
+              <div className="mb-6 inline-flex items-center gap-2 rounded-xl border-[2px] border-[#0c2218] bg-[#f7f0d0] px-4 py-1.5 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] uppercase tracking-wider">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#b8d85a] opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#2d684d]" />
+                </span>
+                <span>পালিতপুর গ্রাম</span>
+                <span className="text-[#b07820]">•</span>
+                <span>ডিজিটাল নাগরিক পোর্টাল</span>
+              </div>
 
-              <h1 className="max-w-4xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.1]">
-                A Smarter Village,
-                <span className="block bg-gradient-to-r from-emerald-700 via-teal-700 to-amber-700 bg-clip-text text-transparent mt-1">
-                  connected to everyone.
+              <h1 className="max-w-4xl text-4xl font-black tracking-tight text-[#f7f0d0] sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.1]">
+                একটি স্মার্ট গ্রাম,
+                <span className="block text-[#b8d85a] mt-1">
+                  সবার সাথে সংযুক্ত।
                 </span>
               </h1>
 
-              <p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg font-normal">
-                PalitpurConnect brings local government services,
-                announcements, public directories, emergency contacts
-                and citizen grievances together in one vibrant digital
-                platform under blessed community harmony and agricultural prosperity.
+              <p className="mt-6 max-w-2xl text-base leading-relaxed text-[#dfe8c4] sm:text-lg font-medium">
+                পালিতপুরকানেক্ট স্থানীয় সরকারের পরিষেবা, ঘোষণা, পাবলিক ডিরেক্টরি, জরুরি যোগাযোগ এবং নাগরিকের অভিযোগগুলিকে আশীর্বাদপুষ্ট কমিউনিটি হারমনি এবং কৃষি সমৃদ্ধির অধীনে একটি প্রাণবন্ত ডিজিটাল প্ল্যাটফর্মে একত্রিত করে।
               </p>
 
               {/* Trust Points */}
               <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                <div className="flex items-center gap-3 text-sm font-semibold text-slate-800 bg-white/60 p-3 rounded-xl border border-slate-200/60 shadow-sm backdrop-blur-xs">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-700 shadow-inner">
-                    <CheckCircle2 size={17} />
+                <div className="flex items-center gap-3 text-sm font-bold text-[#f7f0d0] bg-[#2d684d] p-3.5 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#173528] bg-[#b8d85a] text-[#173528]">
+                    <CheckCircle2 size={17} strokeWidth={2.5} />
                   </span>
-                  Panchayat verified information
+                  পঞ্চায়েত যাচাইকৃত তথ্য
                 </div>
 
-                <div className="flex items-center gap-3 text-sm font-semibold text-slate-800 bg-white/60 p-3 rounded-xl border border-slate-200/60 shadow-sm backdrop-blur-xs">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-teal-700 shadow-inner">
-                    <ShieldCheck size={17} />
+                <div className="flex items-center gap-3 text-sm font-bold text-[#f7f0d0] bg-[#2d684d] p-3.5 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#173528] bg-[#b8d85a] text-[#173528]">
+                    <ShieldCheck size={17} strokeWidth={2.5} />
                   </span>
-                  Citizen-first services
+                  নাগরিক-কেন্দ্রিক পরিষেবা
                 </div>
 
-                <div className="flex items-center gap-3 text-sm font-semibold text-slate-800 bg-white/60 p-3 rounded-xl border border-slate-200/60 shadow-sm backdrop-blur-xs">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 shadow-inner">
-                    <Sparkles size={17} />
+                <div className="flex items-center gap-3 text-sm font-bold text-[#f7f0d0] bg-[#2d684d] p-3.5 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#173528] bg-[#b8d85a] text-[#173528]">
+                    <Sparkles size={17} strokeWidth={2.5} />
                   </span>
-                  Simple digital access
+                  সহজ ডিজিটাল অ্যাক্সেস
                 </div>
 
-                <div className="flex items-center gap-3 text-sm font-semibold text-slate-800 bg-white/60 p-3 rounded-xl border border-slate-200/60 shadow-sm backdrop-blur-xs">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-700 shadow-inner">
-                    <CheckCircle2 size={17} />
+                <div className="flex items-center gap-3 text-sm font-bold text-[#f7f0d0] bg-[#2d684d] p-3.5 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#173528] bg-[#b8d85a] text-[#173528]">
+                    <CheckCircle2 size={17} strokeWidth={2.5} />
                   </span>
-                  Available 24/7
+                  ২৪/৭ উপলব্ধ
                 </div>
               </div>
 
@@ -379,9 +396,9 @@ export default function CitizenDashboard() {
                 <Button
                   size="lg"
                   onClick={scrollToGrievance}
-                  className="bg-gradient-to-r from-emerald-600 via-teal-700 to-emerald-800 hover:from-emerald-500 hover:to-teal-700 text-white font-bold shadow-lg shadow-emerald-700/30 transition-all duration-300 hover:scale-[1.02]"
+                  className="rounded-2xl border-[2px] border-[#0c2218] bg-[#b8d85a] px-6 py-3.5 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] transition-all hover:-translate-y-0.5 hover:bg-[#e6ad45] hover:shadow-[5px_5px_0_#0c2218]"
                 >
-                  Report an Issue
+                  একটি সমস্যা রিপোর্ট করুন
                   <ArrowRight size={18} className="ml-2" />
                 </Button>
 
@@ -389,9 +406,9 @@ export default function CitizenDashboard() {
                   variant="secondary"
                   size="lg"
                   onClick={scrollToAnnouncements}
-                  className="border-2 border-amber-300/80 bg-white hover:bg-amber-50 text-slate-800 font-bold shadow-sm transition-all duration-300"
+                  className="rounded-2xl border-[2px] border-[#0c2218] bg-[#f7f0d0] px-6 py-3.5 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] transition-all hover:-translate-y-0.5 hover:bg-[#b8d85a] hover:shadow-[5px_5px_0_#0c2218]"
                 >
-                  View Announcements
+                  ঘোষণা দেখুন
                 </Button>
               </div>
 
@@ -401,11 +418,6 @@ export default function CitizenDashboard() {
 
             {/* RIGHT SIDE */}
             <div className="relative lg:col-span-5">
-              <div
-                aria-hidden="true"
-                className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-tr from-amber-300/40 via-emerald-300/40 to-teal-300/30 blur-3xl animate-pulse"
-              />
-
               <LiveActivity />
             </div>
 

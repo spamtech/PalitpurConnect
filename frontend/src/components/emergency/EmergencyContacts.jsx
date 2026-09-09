@@ -116,10 +116,27 @@ function getEmergencyEmoji(service = "") {
 
 function getEmergencyLabel(service = "") {
   if (!service) {
-    return "Emergency Service";
+    return "জরুরি পরিষেবা";
   }
 
-  return service;
+  const serviceMap = {
+    police: "পুলিশ",
+    ambulance: "অ্যাম্বুলেন্স",
+    medical: "চিকিৎসা",
+    hospital: "হাসপাতাল",
+    health: "স্বাস্থ্য",
+    fire: "দমকল",
+    rescue: "উদ্ধার",
+    electric: "বিদ্যুৎ",
+    power: "বিদ্যুৎ",
+    electricity: "বিদ্যুৎ",
+    panchayat: "পঞ্চায়েত",
+    government: "সরকার",
+    administration: "প্রশাসন",
+  };
+
+  const key = String(service).toLowerCase();
+  return serviceMap[key] || service;
 }
 
 /* =========================================================
@@ -129,13 +146,13 @@ function getEmergencyLabel(service = "") {
 function normalizeContact(contact) {
   return {
     id: contact.id,
-    name: contact.name || "Emergency Service",
-    service: contact.service || "Emergency Service",
+    name: contact.name || "জরুরি পরিষেবা",
+    service: contact.service || "জরুরি পরিষেবা",
     number: contact.phone || "",
     alternateNumber: contact.alternate_phone || "",
     description:
       contact.description ||
-      "Contact this service for immediate emergency assistance.",
+      "তাত্ক্ষণিক জরুরি সহায়তার জন্য এই পরিষেবার সাথে যোগাযোগ করুন।",
     label: getEmergencyLabel(contact.service),
     emoji: getEmergencyEmoji(contact.service),
     icon: getEmergencyIcon(contact.service),
@@ -156,66 +173,57 @@ function EmergencyCard({ contact }) {
   return (
     <Card
       hover
-      className="group relative overflow-hidden border-rose-200/80 bg-white/90 p-0 shadow-lg shadow-rose-950/5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-rose-400 hover:shadow-2xl"
+      className="group relative overflow-hidden rounded-[24px] border-[3px] border-[#0c2218] bg-[#f7f0d0] p-0 text-[#173528] shadow-[8px_8px_0_rgba(12,34,24,0.3)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#fff9e6]"
     >
-      {/* Top glowing crimson safety strip */}
-      <div className="h-1.5 w-full bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 animate-pulse" />
-
-      {/* Decorative background hazard glow */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-rose-500/10 blur-3xl transition duration-500 group-hover:bg-rose-500/20"
-      />
+      {/* Top red/amber warning strip */}
+      <div className="h-2 w-full bg-red-600 animate-pulse" />
 
       <div className="relative flex h-full flex-col p-6 sm:p-7">
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
-          <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-red-600 to-rose-600 text-white shadow-md shadow-rose-600/30 transition duration-300 group-hover:scale-110">
-            <Icon size={26} />
+          <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-[#173528] bg-red-600 text-white shadow-[4px_4px_0_#0c2218] transition duration-300 group-hover:scale-110">
+            <Icon size={26} strokeWidth={2.5} />
 
-            <span className="absolute -bottom-1 -right-1 rounded-full border border-rose-200 bg-white px-1 text-sm shadow">
+            <span className="absolute -bottom-1 -right-1 rounded-xl border-2 border-[#173528] bg-[#f7f0d0] px-1.5 text-xs shadow-[2px_2px_0_#0c2218]">
               {contact.emoji}
             </span>
           </div>
 
-          <Badge
-            variant="red"
-            className="border border-red-200 bg-red-50 font-bold uppercase tracking-wider text-red-700 shadow-xs"
-          >
-            Critical 🚨
-          </Badge>
+          <span className="rounded-xl bg-red-100 px-3 py-1 text-[10px] font-black border-2 border-[#0c2218] text-red-900 shadow-[3px_3px_0_#0c2218] uppercase tracking-wider animate-pulse">
+            জরুরি 🚨
+          </span>
         </div>
 
         {/* Name */}
-        <h3 className="mt-5 text-xl font-black tracking-tight text-slate-900 transition-colors group-hover:text-red-700">
+        <h3 className="mt-5 text-xl font-black tracking-tight text-[#173528] transition-colors group-hover:text-red-700">
           {contact.name}
         </h3>
 
         {/* Service */}
-        <p className="mt-1 text-xs font-bold uppercase tracking-widest text-rose-600">
+        <p className="mt-1 text-xs font-black uppercase tracking-widest text-red-700">
           {contact.label}
         </p>
 
         {/* Description */}
-        <p className="mt-3 flex-1 text-sm font-normal leading-6 text-slate-600">
+        <p className="mt-3 flex-1 text-xs sm:text-sm font-medium leading-relaxed text-[#42604e]">
           {contact.description}
         </p>
 
         {/* Phone number */}
-        <div className="mt-6 rounded-2xl border border-rose-100 bg-gradient-to-br from-rose-50/50 to-amber-50/30 p-4 shadow-inner">
-          <p className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-rose-700">
-            <Phone size={12} className="text-red-600" />
-            Direct Emergency Hotline
+        <div className="mt-6 rounded-2xl border-2 border-[#0c2218] bg-[#2d684d] p-4 text-[#f7f0d0] shadow-[4px_4px_0_#0c2218]">
+          <p className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-[#e6ad45]">
+            <Phone size={12} className="text-[#b8d85a]" />
+            সরাসরি জরুরি হটলাইন
           </p>
 
-          <p className="mt-1 font-mono text-2xl font-black tracking-tight text-slate-900 drop-shadow-xs">
-            {contact.number || "Not available"}
+          <p className="mt-1 font-mono text-2xl font-black tracking-tight text-[#f7f0d0]">
+            {contact.number || "উপলব্ধ নেই"}
           </p>
 
           {contact.alternateNumber && (
-            <p className="mt-2 text-xs font-semibold text-slate-500">
-              Alternate:{" "}
-              <span className="font-mono text-slate-700 font-bold">
+            <p className="mt-2 text-xs font-semibold text-[#dfe8c4]">
+              বিকল্প:{" "}
+              <span className="font-mono text-[#f7f0d0] font-bold">
                 {contact.alternateNumber}
               </span>
             </p>
@@ -226,15 +234,15 @@ function EmergencyCard({ contact }) {
         {phoneNumber ? (
           <a
             href={`tel:${phoneNumber}`}
-            className="mt-5 inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-red-700 px-5 py-3.5 text-sm font-black uppercase tracking-wide text-white shadow-lg shadow-rose-600/30 transition-all duration-300 hover:scale-[1.02] hover:from-red-500 hover:to-rose-500 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
+            className="mt-5 inline-flex items-center justify-center gap-2.5 rounded-2xl border-[2px] border-[#0c2218] bg-red-600 px-5 py-3.5 text-xs font-black uppercase tracking-wide text-white shadow-[4px_4px_0_#0c2218] transition-all hover:-translate-y-0.5 hover:bg-red-700 hover:shadow-[5px_5px_0_#0c2218]"
           >
-            <Phone size={18} className="animate-bounce" />
-            Call Now 📞
+            <Phone size={16} className="animate-bounce" />
+            এখনই কল করুন 📞
             <ArrowUpRight size={16} />
           </a>
         ) : (
-          <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-100 px-5 py-3.5 text-center text-sm font-bold text-slate-400">
-            Phone number unavailable
+          <div className="mt-5 rounded-2xl border-2 border-[#0c2218] bg-[#173528]/10 px-5 py-3.5 text-center text-xs font-bold text-[#58705e]">
+            ফোন নম্বর উপলব্ধ নেই
           </div>
         )}
       </div>
@@ -265,7 +273,7 @@ export default function EmergencyContacts() {
 
         if (!Array.isArray(data)) {
           throw new Error(
-            "Invalid emergency contacts response from server."
+            "সার্ভার থেকে জরুরি যোগাযোগের ভুল ডেটা এসেছে।"
           );
         }
 
@@ -287,14 +295,14 @@ export default function EmergencyContacts() {
         setContacts(normalizedContacts);
       } catch (err) {
         console.error(
-          "Failed to load emergency contacts:",
+          "জরুরি যোগাযোগ লোড করতে ব্যর্থ হয়েছে:",
           err
         );
 
         if (mounted) {
           setError(
             err?.message ||
-              "Unable to load emergency contacts."
+              "জরুরি যোগাযোগ লোড করা যাচ্ছে না।"
           );
         }
       } finally {
@@ -314,68 +322,50 @@ export default function EmergencyContacts() {
   return (
     <section
       id="emergency"
-      className="relative w-full overflow-hidden border-y border-amber-200/60 bg-gradient-to-b from-slate-50 via-white to-rose-50/30 px-6 py-20 text-slate-900 sm:px-12 sm:py-24 lg:px-16"
+      className="relative w-full overflow-hidden bg-[#173528] text-[#f7f0d0] px-6 py-20 sm:px-12 sm:py-24 lg:px-16 border-b-[3px] border-[#0c2218]"
     >
-      {/* Background ambient hazard glow */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
-        <div className="absolute -left-40 top-20 h-[450px] w-[450px] animate-pulse rounded-full bg-red-200/40 blur-3xl" />
-
-        <div className="absolute -right-40 bottom-0 h-[450px] w-[450px] rounded-full bg-amber-200/40 blur-3xl" />
-
-        <div className="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-rose-100/60 blur-3xl" />
+      {/* Retro ambient background */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#b8d85a]/10 blur-3xl" />
+        <div className="absolute -right-24 top-0 h-96 w-96 rounded-full bg-[#6f9f43]/10 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e6ad45]/10 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(#f7f0d0_1px,transparent_1px)] [background-size:12px_12px]" />
       </div>
 
       <div className="relative mx-auto max-w-[1600px]">
         {/* Section heading */}
         <div className="max-w-3xl">
-          <Badge
-            variant="red"
-            className="border border-red-200 bg-gradient-to-r from-red-50 to-rose-50 px-4 py-1.5 text-red-700 shadow-sm"
-          >
-            <ShieldAlert
-              size={14}
-              className="mr-1.5 text-red-600"
-            />
+          <div className="mb-4 inline-flex items-center gap-2 rounded-xl border-[2px] border-[#0c2218] bg-[#f7f0d0] px-4 py-1.5 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] uppercase tracking-wider">
+            <ShieldAlert size={14} className="text-red-600" />
+            <span>পালিতপুর জরুরি প্রতিক্রিয়া 🚨</span>
+          </div>
 
-            <span className="font-bold">
-              Palitpur Emergency Response 🚨
-            </span>
-          </Badge>
-
-          <h2 className="mt-5 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl lg:text-5xl">
-            Help when you
-            <span className="mt-1 block bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 bg-clip-text text-transparent">
-              need it most 🛡️.
+          <h2 className="mt-4 text-3xl font-black tracking-tight text-[#f7f0d0] sm:text-4xl lg:text-5xl">
+            আপনার যখন সবচেয়ে বেশি
+            <span className="mt-1 block text-[#b8d85a]">
+              প্রয়োজন 🛡️।
             </span>
           </h2>
 
-          <p className="mt-5 text-base font-normal leading-7 text-slate-600 sm:text-lg">
-            Keep these important emergency numbers instantly
-            accessible. For life-threatening situations or
-            crises, contact the appropriate emergency service
-            right away.
+          <p className="mt-5 text-base font-medium leading-relaxed text-[#dfe8c4] sm:text-lg">
+            এই গুরুত্বপূর্ণ জরুরি নম্বরগুলি সহজেই অ্যাক্সেসযোগ্য রাখুন। জীবন-সংকটপূর্ণ পরিস্থিতি বা সংকটের ক্ষেত্রে, অবিলম্বে উপযুক্ত জরুরি পরিষেবার সাথে যোগাযোগ করুন।
           </p>
         </div>
 
         {/* Warning banner */}
-        <div className="mt-8 flex flex-col gap-4 rounded-3xl border border-rose-200 bg-gradient-to-r from-red-50/80 via-white to-amber-50/80 p-6 shadow-xl backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-4 rounded-[24px] border-[3px] border-[#0c2218] bg-[#2d684d] p-6 text-[#f7f0d0] shadow-[8px_8px_0_rgba(12,34,24,0.3)] sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600 ring-1 ring-red-200 shadow-inner">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border-2 border-[#173528] bg-red-600 text-white shadow-[3px_3px_0_#0c2218]">
               <Siren size={24} className="animate-pulse" />
             </div>
 
             <div>
-              <p className="flex items-center gap-2 text-base font-black text-slate-900">
-                Emergency Situation Protocol ⚠️
+              <p className="flex items-center gap-2 text-base font-black text-[#f7f0d0]">
+                জরুরি পরিস্থিতি প্রোটোকল ⚠️
               </p>
 
-              <p className="mt-1 text-sm font-medium leading-6 text-slate-600">
-                Stay calm, clearly state your exact location in
-                Palitpur, and follow instructions given by
-                emergency dispatchers.
+              <p className="mt-1 text-xs sm:text-sm font-medium leading-relaxed text-[#dfe8c4]">
+                শান্ত থাকুন, পালিতপুরে আপনার সঠিক অবস্থান স্পষ্টভাবে বলুন এবং জরুরি ডিসপ্যাচারদের নির্দেশাবলী অনুসরণ করুন।
               </p>
             </div>
           </div>
@@ -387,7 +377,7 @@ export default function EmergencyContacts() {
             {[1, 2, 3].map((item) => (
               <div
                 key={item}
-                className="h-[360px] animate-pulse rounded-3xl border border-rose-200 bg-white/70 shadow-sm"
+                className="h-[360px] animate-pulse rounded-[24px] border-[3px] border-[#0c2218] bg-[#f7f0d0]/50 shadow-sm"
               />
             ))}
           </div>
@@ -395,37 +385,24 @@ export default function EmergencyContacts() {
 
         {/* Error */}
         {!loading && error && (
-          <div className="mt-8 rounded-3xl border border-red-200 bg-red-50 p-6 text-center shadow-sm">
-            <ShieldAlert
-              size={36}
-              className="mx-auto text-red-600"
-            />
-
-            <h3 className="mt-3 text-lg font-black text-slate-900">
-              Emergency contacts unavailable
+          <div className="mt-8 rounded-[24px] border-[3px] border-[#0c2218] bg-red-100 p-6 text-center text-red-900 shadow-[8px_8px_0_rgba(12,34,24,0.3)]">
+            <ShieldAlert size={36} className="mx-auto text-red-600" />
+            <h3 className="mt-3 text-lg font-black">
+              জরুরি যোগাযোগগুলি উপলব্ধ নেই
             </h3>
-
-            <p className="mt-2 text-sm text-slate-600">
-              {error}
-            </p>
+            <p className="mt-2 text-sm font-semibold">{error}</p>
           </div>
         )}
 
         {/* Empty */}
         {!loading && !error && contacts.length === 0 && (
-          <div className="mt-8 rounded-3xl border border-dashed border-amber-300 bg-white/90 p-10 text-center shadow-sm">
-            <Sparkles
-              size={36}
-              className="mx-auto text-amber-500"
-            />
-
-            <h3 className="mt-3 text-lg font-black text-slate-900">
-              No emergency contacts available
+          <div className="mt-8 rounded-[24px] border-[3px] border-dashed border-[#0c2218]/40 bg-[#f7f0d0] p-10 text-center text-[#173528] shadow-[8px_8px_0_rgba(12,34,24,0.3)]">
+            <Sparkles size={36} className="mx-auto text-[#b07820]" />
+            <h3 className="mt-3 text-lg font-black">
+              কোনো জরুরি যোগাযোগ উপলব্ধ নেই
             </h3>
-
-            <p className="mt-2 text-sm text-slate-600">
-              The local administration has not published any
-              emergency contacts yet.
+            <p className="mt-2 text-xs sm:text-sm font-medium text-[#42604e]">
+              স্থানীয় প্রশাসন এখনও কোনো জরুরি যোগাযোগ প্রকাশ করেনি।
             </p>
           </div>
         )}
@@ -443,27 +420,21 @@ export default function EmergencyContacts() {
         )}
 
         {/* Bottom information */}
-        <div className="mt-12 border-t border-amber-200/60 pt-8">
+        <div className="mt-12 border-t-2 border-[#f7f0d0]/15 pt-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <p className="flex items-center gap-2 text-sm font-bold text-slate-900">
-                <HeartPulse
-                  size={16}
-                  className="text-red-600"
-                />
-
-                PalitpurConnect Emergency Directory & Safety Hub
+              <p className="flex items-center gap-2 text-sm font-black text-[#f7f0d0]">
+                <HeartPulse size={16} className="text-red-500" />
+                পালিতপুরকানেক্ট জরুরি ডিরেক্টরি এবং সেফটি হাব
               </p>
 
-              <p className="mt-1 text-xs font-medium text-slate-500">
-                Emergency numbers are maintained by the local
-                Gram Panchayat administration.
+              <p className="mt-1 text-xs font-semibold text-[#dfe8c4]">
+                জরুরি নম্বরগুলি স্থানীয় গ্রাম পঞ্চায়েত প্রশাসন দ্বারা রক্ষণাবেক্ষণ করা হয়।
               </p>
             </div>
 
-            <Button
-              variant="outline"
-              size="sm"
+            <button
+              type="button"
               onClick={() =>
                 document
                   .getElementById("grievance")
@@ -471,15 +442,11 @@ export default function EmergencyContacts() {
                     behavior: "smooth",
                   })
               }
-              className="border-amber-300 font-bold text-slate-700 bg-white hover:bg-amber-50 hover:text-slate-900"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border-[2px] border-[#0c2218] bg-[#b8d85a] px-5 py-3 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] transition-all hover:bg-[#e6ad45]"
             >
-              Report a non-emergency issue 📝
-
-              <ArrowUpRight
-                size={16}
-                className="ml-1"
-              />
-            </Button>
+              একটি অ-জরুরি সমস্যা রিপোর্ট করুন 📝
+              <ArrowUpRight size={16} />
+            </button>
           </div>
         </div>
       </div>

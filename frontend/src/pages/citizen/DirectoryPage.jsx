@@ -42,7 +42,7 @@ export default function DirectoryPage() {
       console.error("Failed to load directory:", err);
       setError(
         err?.message ||
-          "Unable to load the village directory. Please try again."
+          "গ্রামের ডিরেক্টরি লোড করা যাচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন।"
       );
     } finally {
       setLoading(false);
@@ -93,133 +93,141 @@ export default function DirectoryPage() {
     });
   }, [entries, search, category]);
 
-  return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-slate-50 via-white to-emerald-50/30 relative isolate overflow-hidden">
-      {/* Ambient Background Glows */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-      >
-        <div className="absolute left-[-10%] top-[-15%] h-[500px] w-[500px] rounded-full bg-gradient-to-br from-amber-200/40 via-emerald-200/50 to-transparent blur-3xl animate-pulse" />
-        <div className="absolute right-[-10%] top-[10%] h-[600px] w-[600px] rounded-full bg-gradient-to-bl from-teal-200/50 via-emerald-100/60 to-amber-100/30 blur-3xl" />
-      </div>
+  const translateCategory = (cat) => {
+    if (cat === "all") return "সকল বিভাগ";
+    const catMap = {
+      general: "সাধারণ",
+      panchayat: "পঞ্চায়েত",
+      health: "স্বাস্থ্য",
+      education: "শিক্ষা",
+      agriculture: "কৃষি",
+      water: "জল",
+      electricity: "বিদ্যুৎ",
+      emergency: "জরুরি",
+    };
+    const key = String(cat).toLowerCase();
+    return catMap[key] || String(cat).replace(/_/g, " ");
+  };
 
-      {/* Grid Background Pattern */}
-      <div
-        aria-hidden="true"
-        className="radial-grid pointer-events-none absolute inset-0 -z-10 opacity-70"
-      />
+  return (
+    <div className="min-h-screen w-full bg-[#173528] text-[#f7f0d0] relative isolate overflow-hidden">
+      {/* Retro ambient background */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#b8d85a]/10 blur-3xl" />
+        <div className="absolute -right-24 top-0 h-96 w-96 rounded-full bg-[#6f9f43]/10 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e6ad45]/10 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(#f7f0d0_1px,transparent_1px)] [background-size:12px_12px]" />
+      </div>
 
       {/* ======================================================
           HERO / BANNER SECTION
       ====================================================== */}
-      <section className="relative overflow-hidden border-b border-amber-200/60 bg-white/80 backdrop-blur-md shadow-xs py-10 lg:py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden border-b-[3px] border-[#0c2218] bg-[#10281e] py-10 lg:py-14">
+        <div className="mx-auto max-w-[1600px] px-6 sm:px-12 lg:px-16">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
             
             {/* Left Column: Heading & Mission */}
             <div className="max-w-3xl">
-              <Badge variant="success" className="mb-4 px-3.5 py-1.5 shadow-sm border border-emerald-200/80 bg-gradient-to-r from-emerald-50 to-amber-50">
-                <span className="mr-2 inline-block h-2 w-2 animate-ping rounded-full bg-amber-500 shadow-sm" />
-                <span className="font-bold text-emerald-900">PalitpurConnect</span>
-                <span className="mx-1 text-amber-600">•</span>
-                <span className="text-slate-700 font-medium">Services Directory</span>
-              </Badge>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-xl border-[2px] border-[#0c2218] bg-[#f7f0d0] px-4 py-1.5 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] uppercase tracking-wider">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#b8d85a] animate-pulse" />
+                <span>পালিতপুরকানেক্ট</span>
+                <span className="text-[#b07820]">•</span>
+                <span>পরিষেবা ডিরেক্টরি</span>
+              </div>
 
-              <h1 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl lg:text-5xl leading-[1.1]">
-                Find Local Services,
-                <span className="block bg-gradient-to-r from-emerald-700 via-teal-700 to-amber-700 bg-clip-text text-transparent mt-1">
-                  Connected to Everyone.
+              <h1 className="text-3xl font-black tracking-tight text-[#f7f0d0] sm:text-4xl lg:text-5xl leading-[1.1]">
+                স্থানীয় পরিষেবা খুঁজুন,
+                <span className="block text-[#b8d85a] mt-1">
+                  সবার সাথে সংযুক্ত থাকুন।
                 </span>
               </h1>
 
-              <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
-                PalitpurConnect brings local government offices, public services, essential facilities, and community contacts together in one vibrant digital platform.
+              <p className="mt-4 text-base leading-relaxed text-[#dfe8c4] sm:text-lg font-medium">
+                পালিতপুরকানেক্ট স্থানীয় সরকারি অফিস, জনসেবা, প্রয়োজনীয় সুবিধা এবং সম্প্রদায়ের যোগাযোগগুলিকে একটি প্রাণবন্ত ডিজিটাল প্ল্যাটফর্মে একত্রিত করেছে।
               </p>
 
               {/* Trust Points */}
               <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-800 bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-200/60 shadow-xs">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700">✓</span>
-                  Panchayat verified
+                <div className="flex items-center gap-2.5 text-xs font-bold text-[#f7f0d0] bg-[#2d684d] p-3 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-[#173528] bg-[#b8d85a] text-[#173528] font-black">✓</span>
+                  পঞ্চায়েত যাচাইকৃত
                 </div>
-                <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-800 bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-200/60 shadow-xs">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-100 text-teal-700">✓</span>
-                  Citizen-first listings
+                <div className="flex items-center gap-2.5 text-xs font-bold text-[#f7f0d0] bg-[#2d684d] p-3 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-[#173528] bg-[#b8d85a] text-[#173528] font-black">✓</span>
+                  নাগরিক-কেন্দ্রিক তালিকা
                 </div>
-                <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-800 bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-200/60 shadow-xs">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">✓</span>
-                  Simple digital access
+                <div className="flex items-center gap-2.5 text-xs font-bold text-[#f7f0d0] bg-[#2d684d] p-3 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-[#173528] bg-[#b8d85a] text-[#173528] font-black">✓</span>
+                  সহজ ডিজিটাল অ্যাক্সেস
                 </div>
-                <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-800 bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-200/60 shadow-xs">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700">✓</span>
-                  Available 24/7
+                <div className="flex items-center gap-2.5 text-xs font-bold text-[#f7f0d0] bg-[#2d684d] p-3 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-[#173528] bg-[#b8d85a] text-[#173528] font-black">✓</span>
+                  ২৪/৭ উপলব্ধ
                 </div>
               </div>
             </div>
 
             {/* Right Column: Mini Metric Cards & Refresh */}
             <div className="flex flex-col gap-3 shrink-0 w-full lg:w-72">
-              <div className="rounded-2xl border border-amber-200/60 bg-gradient-to-br from-white/90 to-emerald-50/30 p-3.5 shadow-sm backdrop-blur-md">
-                <p className="text-xl font-black text-emerald-900">24/7</p>
-                <p className="text-xs font-bold text-slate-800">Directory Access</p>
-                <p className="text-[11px] text-slate-500">Contacts available anytime</p>
+              <div className="rounded-2xl border-[2px] border-[#0c2218] bg-[#2d684d] p-4 text-[#f7f0d0] shadow-[4px_4px_0_#0c2218]">
+                <p className="text-xl font-black text-[#b8d85a]">২৪/৭</p>
+                <p className="text-xs font-black text-[#f7f0d0]">ডিরেক্টরি অ্যাক্সেস</p>
+                <p className="text-[11px] font-semibold text-[#dfe8c4]">যেকোনো সময় যোগাযোগ উপলব্ধ</p>
               </div>
 
-              <div className="rounded-2xl border border-amber-200/60 bg-gradient-to-br from-white/90 to-emerald-50/30 p-3.5 shadow-sm backdrop-blur-md">
-                <p className="text-xl font-black text-emerald-900">100%</p>
-                <p className="text-xs font-bold text-slate-800">Citizen Focused</p>
-                <p className="text-[11px] text-slate-500">Designed around local needs</p>
+              <div className="rounded-2xl border-[2px] border-[#0c2218] bg-[#2d684d] p-4 text-[#f7f0d0] shadow-[4px_4px_0_#0c2218]">
+                <p className="text-xl font-black text-[#b8d85a]">১০০%</p>
+                <p className="text-xs font-black text-[#f7f0d0]">নাগরিক কেন্দ্রিক</p>
+                <p className="text-[11px] font-semibold text-[#dfe8c4]">স্থানীয় চাহিদার কথা মাথায় রেখে তৈরি</p>
               </div>
 
-              <div className="rounded-2xl border border-amber-200/60 bg-gradient-to-br from-white/90 to-emerald-50/30 p-3.5 shadow-sm backdrop-blur-md">
-                <p className="text-xl font-black text-amber-700">&lt;24h</p>
-                <p className="text-xs font-bold text-slate-800">Directory Updates</p>
-                <p className="text-[11px] text-slate-500">Accurate administration records</p>
+              <div className="rounded-2xl border-[2px] border-[#0c2218] bg-[#2d684d] p-4 text-[#f7f0d0] shadow-[4px_4px_0_#0c2218]">
+                <p className="text-xl font-black text-[#e6ad45]">&lt;২৪ ঘণ্টা</p>
+                <p className="text-xs font-black text-[#f7f0d0]">ডিরেক্টরি আপডেট</p>
+                <p className="text-[11px] font-semibold text-[#dfe8c4]">সঠিক প্রশাসনিক রেকর্ড</p>
               </div>
 
-              <Button
+              <button
                 type="button"
-                variant="secondary"
                 onClick={loadDirectory}
                 disabled={loading}
-                className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-xl border border-amber-300/80 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 shadow-sm transition-all hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-2xl border-[2px] border-[#0c2218] bg-[#b8d85a] px-4 py-3 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] transition-all hover:bg-[#e6ad45] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <RefreshCw
-                  className={`h-3.5 w-3.5 text-amber-600 ${loading ? "animate-spin" : ""}`}
+                  className={`h-3.5 w-3.5 text-[#173528] ${loading ? "animate-spin" : ""}`}
                 />
-                Refresh Directory
-              </Button>
+                ডিরেক্টরি রিফ্রেশ করুন
+              </button>
             </div>
 
           </div>
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-[1600px] px-6 py-12 sm:px-12 lg:px-16">
         {/* Search + Filter Container */}
-        <div className="mb-8 rounded-2xl border border-amber-200/60 bg-white/90 p-4 sm:p-5 shadow-sm backdrop-blur-xl">
+        <div className="mb-8 rounded-[24px] border-[3px] border-[#0c2218] bg-[#f7f0d0] p-5 shadow-[8px_8px_0_rgba(12,34,24,0.3)] text-[#173528]">
           <div className="grid gap-3.5 md:grid-cols-[1fr_240px]">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#58705e]" />
 
               <input
                 type="text"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search services, offices, contacts..."
-                className="w-full rounded-xl border border-slate-200/80 bg-slate-50/50 py-3 pl-11 pr-4 text-sm font-medium text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100"
+                placeholder="সেবা, অফিস, যোগাযোগ খুঁজুন..."
+                className="w-full rounded-xl border-2 border-[#173528] bg-white py-3 pl-11 pr-4 text-sm font-semibold text-[#173528] outline-none transition placeholder:text-[#58705e] focus:border-[#2d684d] focus:ring-2 focus:ring-[#b8d85a]"
               />
             </div>
 
             <select
               value={category}
               onChange={(event) => setCategory(event.target.value)}
-              className="rounded-xl border border-slate-200/80 bg-slate-50/50 px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100 cursor-pointer"
+              className="rounded-xl border-2 border-[#173528] bg-white px-4 py-3 text-sm font-black text-[#173528] outline-none transition focus:border-[#2d684d] focus:ring-2 focus:ring-[#b8d85a] cursor-pointer"
             >
               {categories.map((item) => (
                 <option key={item} value={item}>
-                  {item === "all" ? "All Categories" : item.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}
+                  {translateCategory(item)}
                 </option>
               ))}
             </select>
@@ -228,38 +236,38 @@ export default function DirectoryPage() {
 
         {/* Error */}
         {error && (
-          <div className="mb-8 flex flex-col gap-4 rounded-2xl border border-red-200 bg-red-50/90 p-6 shadow-sm backdrop-blur-md sm:flex-row sm:items-center sm:justify-between">
+          <div className="mb-8 flex flex-col gap-4 rounded-[24px] border-[3px] border-[#0c2218] bg-red-100 p-6 shadow-[8px_8px_0_rgba(12,34,24,0.3)] text-red-900 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-4">
-              <div className="mt-0.5 rounded-full bg-red-100 p-2.5 shadow-sm">
-                <AlertCircle className="h-5 w-5 shrink-0 text-red-600" />
+              <div className="mt-0.5 rounded-xl border-2 border-[#173528] bg-red-200 p-2.5 text-red-900">
+                <AlertCircle className="h-5 w-5 shrink-0" />
               </div>
 
               <div>
-                <h2 className="font-bold text-red-900 text-base">
-                  Unable to load directory
+                <h2 className="font-black text-base">
+                  ডিরেক্টরি লোড করা যাচ্ছে না
                 </h2>
-                <p className="mt-1 text-sm text-red-700">{error}</p>
+                <p className="mt-1 text-sm font-semibold">{error}</p>
               </div>
             </div>
 
-            <Button
+            <button
               type="button"
               onClick={loadDirectory}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-bold text-white shadow-md hover:bg-red-700"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#0c2218] bg-red-600 px-4 py-2.5 text-xs font-black text-white shadow-[3px_3px_0_#0c2218] hover:bg-red-700"
             >
               <RefreshCw className="h-4 w-4" />
-              Try Again
-            </Button>
+              আবার চেষ্টা করুন
+            </button>
           </div>
         )}
 
         {/* Loading */}
         {loading && (
           <div className="flex min-h-[300px] items-center justify-center">
-            <div className="flex flex-col items-center gap-3.5 rounded-2xl bg-white/90 p-8 shadow-sm border border-amber-200/60 backdrop-blur-md">
-              <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-              <p className="text-sm font-bold text-slate-700 animate-pulse">
-                Loading village directory...
+            <div className="flex flex-col items-center gap-3.5 rounded-[24px] border-[3px] border-[#0c2218] bg-[#f7f0d0] p-8 shadow-[8px_8px_0_rgba(12,34,24,0.3)] text-[#173528]">
+              <Loader2 className="h-8 w-8 animate-spin text-[#2d684d]" />
+              <p className="text-sm font-black text-[#173528] animate-pulse">
+                গ্রামের ডিরেক্টরি লোড হচ্ছে...
               </p>
             </div>
           </div>
@@ -267,17 +275,17 @@ export default function DirectoryPage() {
 
         {/* Empty */}
         {!loading && !error && filteredEntries.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-amber-300 bg-white/90 px-6 py-14 text-center shadow-sm backdrop-blur-md">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-600 text-white shadow-md shadow-amber-600/30">
+          <div className="rounded-[24px] border-[3px] border-dashed border-[#0c2218]/40 bg-[#f7f0d0] px-6 py-14 text-center text-[#173528] shadow-[8px_8px_0_rgba(12,34,24,0.3)]">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-[#173528] bg-[#b8d85a] text-[#173528] shadow-[4px_4px_0_#0c2218]">
               <Building2 className="h-6 w-6" />
             </div>
 
-            <h2 className="text-lg font-bold text-slate-900">
-              No directory entries found
+            <h2 className="text-lg font-black">
+              কোনো ডিরেক্টরি এন্ট্রি পাওয়া যায়নি
             </h2>
 
-            <p className="mx-auto mt-1.5 max-w-md text-xs sm:text-sm text-slate-600">
-              Try modifying your search keywords or switching category filters.
+            <p className="mx-auto mt-1.5 max-w-md text-xs sm:text-sm font-medium text-[#42604e]">
+              আপনার অনুসন্ধանի শব্দ বা বিভাগ ফিল্টার পরিবর্তন করে আবার চেষ্টা করুন।
             </p>
           </div>
         )}
@@ -286,16 +294,16 @@ export default function DirectoryPage() {
         {!loading && filteredEntries.length > 0 && (
           <>
             <div className="mb-4 flex items-center justify-between px-1">
-              <p className="text-xs sm:text-sm font-semibold text-slate-600">
-                Showing{" "}
-                <span className="font-bold text-emerald-800">
+              <p className="text-xs sm:text-sm font-black text-[#dfe8c4]">
+                মোট{" "}
+                <span className="font-black text-[#b8d85a]">
                   {filteredEntries.length}
                 </span>{" "}
-                {filteredEntries.length === 1 ? "listing" : "listings"}
+                টি তালিকা দেখানো হচ্ছে
               </p>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredEntries.map((entry) => (
                 <DirectoryCard
                   key={entry.id}
@@ -322,15 +330,32 @@ function DirectoryCard({ entry }) {
     website_url,
   } = entry;
 
+  const translateCategory = (cat) => {
+    if (!cat) return "";
+    const catMap = {
+      general: "সাধারণ",
+      panchayat: "পঞ্চায়েত",
+      health: "স্বাস্থ্য",
+      education: "শিক্ষা",
+      agriculture: "কৃষি",
+      water: "জল",
+      electricity: "বিদ্যুৎ",
+      emergency: "জরুরি",
+    };
+    const key = String(cat).toLowerCase();
+    return catMap[key] || String(cat).replace(/_/g, " ");
+  };
+
   return (
-    <Card className="group flex flex-col overflow-hidden rounded-xl border-amber-200/60 bg-white/90 p-0 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-amber-400 hover:shadow-md">
-      {/* Image or Clean Gradient Header - Sleeker Aspect Ratio */}
+    <Card className="group flex flex-col overflow-hidden rounded-[24px] border-[3px] border-[#0c2218] bg-[#f7f0d0] p-0 text-[#173528] shadow-[8px_8px_0_rgba(12,34,24,0.3)] transition duration-300 hover:-translate-y-1 hover:bg-[#fff9e6]">
+      <div className="h-2 w-full bg-[#0c2218]" />
+
+      {/* Image or Clean Gradient Header */}
       {image_url ? (
-        <div className="aspect-[24/9] overflow-hidden bg-slate-100 relative">
-          <div className="absolute inset-0 bg-slate-950/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10 pointer-events-none" />
+        <div className="aspect-[24/9] overflow-hidden bg-[#173528] relative border-b-[3px] border-[#0c2218]">
           <img
             src={image_url}
-            alt={name || "Directory entry"}
+            alt={name || "ডিরেক্টরি এন্ট্রি"}
             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
             onError={(event) => {
               event.currentTarget.style.display = "none";
@@ -338,40 +363,39 @@ function DirectoryCard({ entry }) {
           />
         </div>
       ) : (
-        <div className="flex aspect-[24/9] items-center justify-center bg-gradient-to-br from-emerald-50 via-teal-50 to-amber-50 relative overflow-hidden">
-          <div className="absolute -right-6 -bottom-6 w-16 h-16 rounded-full bg-amber-400/20 blur-xl pointer-events-none" />
-          <Building2 className="h-7 w-7 text-emerald-700 transition-transform duration-300 group-hover:scale-110" />
+        <div className="flex aspect-[24/9] items-center justify-center bg-[#2d684d] text-[#f7f0d0] relative overflow-hidden border-b-[3px] border-[#0c2218]">
+          <Building2 className="h-7 w-7 text-[#b8d85a] transition-transform duration-300 group-hover:scale-110" />
         </div>
       )}
 
-      {/* Content - Compact padding */}
-      <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
+      {/* Content */}
+      <div className="flex flex-1 flex-col justify-between p-5">
         <div>
           {/* Category Badge */}
           {category && (
-            <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold border border-emerald-200 text-emerald-700 shadow-xs">
-              {category.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}
+            <span className="inline-flex rounded-xl bg-[#2d684d] px-3 py-1 text-[10px] font-black border-2 border-[#0c2218] text-[#f7f0d0] shadow-[3px_3px_0_#0c2218] uppercase tracking-wider">
+              {translateCategory(category)}
             </span>
           )}
 
           {/* Name */}
-          <h2 className="mt-2.5 text-sm font-bold text-slate-900 group-hover:text-emerald-800 transition-colors">
-            {name || "Unnamed Service"}
+          <h2 className="mt-3 text-base font-black text-[#173528] group-hover:text-[#2d684d] transition-colors">
+            {name || "নামহীন সেবা"}
           </h2>
 
           {/* Description */}
           {description && (
-            <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-slate-600">
+            <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed font-medium text-[#42604e]">
               {description}
             </p>
           )}
         </div>
 
         {/* Contact information */}
-        <div className="mt-4 space-y-2 border-t border-slate-100 pt-3.5">
+        <div className="mt-5 space-y-2.5 border-t-2 border-[#0c2218]/15 pt-4">
           {address && (
-            <div className="flex items-start gap-2 text-xs text-slate-600">
-              <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600" />
+            <div className="flex items-start gap-2 text-xs font-semibold text-[#42604e]">
+              <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#b07820]" />
               <span className="leading-snug">{address}</span>
             </div>
           )}
@@ -379,9 +403,9 @@ function DirectoryCard({ entry }) {
           {phone && (
             <a
               href={`tel:${phone}`}
-              className="flex items-center gap-2 text-xs font-semibold text-slate-700 transition hover:text-emerald-700"
+              className="flex items-center gap-2 text-xs font-bold text-[#173528] transition hover:text-[#2d684d]"
             >
-              <Phone className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+              <Phone className="h-3.5 w-3.5 shrink-0 text-[#2d684d]" />
               <span>{phone}</span>
             </a>
           )}
@@ -389,9 +413,9 @@ function DirectoryCard({ entry }) {
           {email && (
             <a
               href={`mailto:${email}`}
-              className="flex items-center gap-2 break-all text-xs font-semibold text-slate-700 transition hover:text-emerald-700"
+              className="flex items-center gap-2 break-all text-xs font-bold text-[#173528] transition hover:text-[#2d684d]"
             >
-              <Mail className="h-3.5 w-3.5 shrink-0 text-teal-600" />
+              <Mail className="h-3.5 w-3.5 shrink-0 text-[#2d684d]" />
               <span>{email}</span>
             </a>
           )}
@@ -401,10 +425,10 @@ function DirectoryCard({ entry }) {
               href={website_url}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-2 break-all text-xs font-bold text-emerald-700 transition hover:text-amber-700 pt-0.5"
+              className="flex items-center gap-2 break-all text-xs font-black text-[#2d684d] transition hover:text-[#b07820] pt-0.5"
             >
-              <Globe className="h-3.5 w-3.5 shrink-0 text-amber-600" />
-              <span>Visit official website</span>
+              <Globe className="h-3.5 w-3.5 shrink-0 text-[#b07820]" />
+              <span>অফিসিয়াল ওয়েবসাইট দেখুন</span>
             </a>
           )}
         </div>

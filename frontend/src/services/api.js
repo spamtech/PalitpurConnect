@@ -99,6 +99,11 @@ export const api = {
       method: "POST",
     }),
 
+  getAllUsersAdmin: () =>
+    request("/auth/admin/users", {
+      method: "GET",
+    }),
+
   /*
   |--------------------------------------------------------------------------
   | ADMIN DASHBOARD
@@ -271,6 +276,11 @@ export const api = {
       body: JSON.stringify(payload),
     }),
 
+  trackGrievance: (ticketNumber) =>
+    request(`/grievances/track/${ticketNumber}`, {
+      method: "GET",
+    }),
+
   getMyGrievances: () =>
     request("/grievances/my", {
       method: "GET",
@@ -297,11 +307,30 @@ export const api = {
       method: "GET",
     }),
 
-  updateLandingContentMultipart: (formData) =>
-    request("/landing/update", {
+  updateLandingContentMultipart: (payload) => {
+    let body = payload;
+    if (!(payload instanceof FormData)) {
+      body = new FormData();
+      Object.keys(payload).forEach((key) => {
+        if (payload[key] !== undefined && payload[key] !== null) {
+          if (
+            key === "areas" ||
+            key === "gallery_metadata" ||
+            (typeof payload[key] === "object" && !(payload[key] instanceof File))
+          ) {
+            body.append(key, JSON.stringify(payload[key]));
+          } else {
+            body.append(key, payload[key]);
+          }
+        }
+      });
+    }
+
+    return request("/landing/update", {
       method: "POST",
-      body: formData,
-    }),
+      body: body,
+    });
+  },
 
   deleteLandingSection: (key) =>
     request(`/landing/${key}`, {

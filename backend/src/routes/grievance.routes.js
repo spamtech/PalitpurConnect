@@ -1,8 +1,8 @@
-
 import { Router } from "express";
 
 import {
   submitGrievance,
+  trackGrievance,
   myGrievances,
   grievanceDetails,
   getGrievances,
@@ -24,6 +24,12 @@ router.post(
   "/",
   authenticate,
   submitGrievance
+);
+
+// Track grievance by ticket number (IMPORTANT: Place this BEFORE /:id so Express doesn't treat "track" as an ID)
+router.get(
+  "/track/:ticketNumber",
+  trackGrievance
 );
 
 // Get logged-in citizen's grievances
@@ -69,4 +75,3 @@ router.delete(
 );
 
 export default router;
-

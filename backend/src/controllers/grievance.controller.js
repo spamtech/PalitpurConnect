@@ -1,4 +1,3 @@
-
 import {
   createGrievanceSchema,
 } from "../validators/grievance.validator.js";
@@ -7,6 +6,7 @@ import {
   createGrievance,
   getCitizenGrievances,
   getGrievanceById,
+  getGrievanceByTicketNumber,
   getAllGrievances,
   updateGrievanceById,
   deleteGrievanceById,
@@ -32,6 +32,29 @@ export async function submitGrievance(req, res, next) {
       grievance,
       "Grievance submitted successfully",
       201
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function trackGrievance(req, res, next) {
+  try {
+    const { ticketNumber } = req.params;
+    
+    const grievance = await getGrievanceByTicketNumber(ticketNumber);
+
+    if (!grievance) {
+      return res.status(404).json({
+        success: false,
+        message: "No grievance found with this ticket number.",
+      });
+    }
+
+    return successResponse(
+      res,
+      grievance,
+      "Grievance status retrieved successfully"
     );
   } catch (error) {
     next(error);
@@ -155,4 +178,3 @@ export async function deleteGrievance(req, res, next) {
     next(error);
   }
 }
-

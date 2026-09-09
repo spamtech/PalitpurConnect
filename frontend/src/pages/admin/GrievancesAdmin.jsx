@@ -1,5 +1,3 @@
-
-import { useEffect, useMemo, useState } from "react";
 import {
   AlertCircle,
   CheckCircle2,
@@ -13,7 +11,9 @@ import {
   Search,
   UserRound,
   X,
+  Sparkles,
 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "../../components/ui";
 import { api } from "../../services/api";
@@ -70,56 +70,22 @@ function formatDate(value) {
   });
 }
 
-function getStatusClass(status) {
-  switch (status) {
-    case "submitted":
-      return "bg-slate-100 text-slate-700";
-
-    case "acknowledged":
-      return "bg-blue-100 text-blue-700";
-
-    case "in_progress":
-      return "bg-amber-100 text-amber-700";
-
-    case "resolved":
-      return "bg-emerald-100 text-emerald-700";
-
-    case "rejected":
-      return "bg-red-100 text-red-700";
-
-    case "closed":
-      return "bg-purple-100 text-purple-700";
-
-    default:
-      return "bg-slate-100 text-slate-700";
-  }
-}
-
-function getPriorityClass(priority) {
-  switch (priority) {
-    case "low":
-      return "bg-slate-100 text-slate-700";
-
-    case "medium":
-      return "bg-blue-100 text-blue-700";
-
-    case "high":
-      return "bg-orange-100 text-orange-700";
-
-    case "urgent":
-      return "bg-red-100 text-red-700";
-
-    default:
-      return "bg-slate-100 text-slate-700";
-  }
-}
-
 function StatusBadge({ status }) {
   return (
     <span
-      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${getStatusClass(
-        status
-      )}`}
+      className={`inline-flex rounded-xl px-3 py-1 text-[10px] font-black border-2 border-[#221208] shadow-[2px_2px_0_#221208] uppercase tracking-wider ${
+        status === "submitted"
+          ? "bg-[#faebd7] text-[#221208]"
+          : status === "acknowledged"
+          ? "bg-blue-200 text-blue-900"
+          : status === "in_progress"
+          ? "bg-[#e68a45] text-[#221208]"
+          : status === "resolved"
+          ? "bg-[#b8d85a] text-[#221208]"
+          : status === "rejected"
+          ? "bg-red-200 text-red-900"
+          : "bg-purple-200 text-purple-900"
+      }`}
     >
       {formatStatus(status)}
     </span>
@@ -129,9 +95,15 @@ function StatusBadge({ status }) {
 function PriorityBadge({ priority }) {
   return (
     <span
-      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${getPriorityClass(
-        priority
-      )}`}
+      className={`inline-flex rounded-xl px-3 py-1 text-[10px] font-black border-2 border-[#221208] shadow-[2px_2px_0_#221208] uppercase tracking-wider ${
+        priority === "low"
+          ? "bg-[#faebd7] text-[#221208]"
+          : priority === "medium"
+          ? "bg-blue-200 text-blue-900"
+          : priority === "high"
+          ? "bg-orange-200 text-orange-900"
+          : "bg-red-200 text-red-900"
+      }`}
     >
       {formatPriority(priority)}
     </span>
@@ -140,16 +112,16 @@ function PriorityBadge({ priority }) {
 
 function EmptyState({ hasFilters }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center">
-      <ClipboardList className="mx-auto h-10 w-10 text-slate-300" />
+    <div className="rounded-[24px] border-[3px] border-[#221208] bg-white p-12 text-center text-[#221208] shadow-[8px_8px_0_rgba(34,18,8,0.2)]">
+      <ClipboardList className="mx-auto h-10 w-10 text-[#4a2512]" />
 
-      <h2 className="mt-4 font-semibold text-slate-900">
+      <h2 className="mt-4 text-base font-black text-[#221208]">
         {hasFilters
           ? "No matching grievances"
           : "No grievances found"}
       </h2>
 
-      <p className="mt-2 text-sm text-slate-500">
+      <p className="mt-1 text-xs sm:text-sm font-medium text-[#5a321a]">
         {hasFilters
           ? "Try changing the search or filter options."
           : "Citizen grievances will appear here once submitted."}
@@ -181,14 +153,11 @@ export default function GrievancesAdmin() {
       setError("");
 
       const response = await api.getAdminGrievances();
-
-      const entries =
-        response.data?.grievances || [];
+      const entries = response.data?.grievances || [];
 
       setGrievances(entries);
     } catch (err) {
       console.error("Failed to load grievances:", err);
-
       setError(
         err.message ||
           "Unable to load grievances. Please try again."
@@ -203,8 +172,7 @@ export default function GrievancesAdmin() {
   }, []);
 
   const filteredGrievances = useMemo(() => {
-    const normalizedSearch =
-      search.trim().toLowerCase();
+    const normalizedSearch = search.trim().toLowerCase();
 
     return grievances.filter((grievance) => {
       const matchesSearch =
@@ -248,12 +216,9 @@ export default function GrievancesAdmin() {
 
   const openDetails = (grievance) => {
     setSelectedGrievance(grievance);
-
     setEditStatus(grievance.status || "submitted");
     setEditPriority(grievance.priority || "medium");
-    setEditAssignedTo(
-      grievance.assigned_to || ""
-    );
+    setEditAssignedTo(grievance.assigned_to || "");
   };
 
   const closeDetails = () => {
@@ -275,8 +240,7 @@ export default function GrievancesAdmin() {
       const payload = {
         status: editStatus,
         priority: editPriority,
-        assigned_to:
-          editAssignedTo.trim() || null,
+        assigned_to: editAssignedTo.trim() || null,
       };
 
       const response =
@@ -306,7 +270,6 @@ export default function GrievancesAdmin() {
         "Failed to update grievance:",
         err
       );
-
       setError(
         err.message ||
           "Unable to update grievance."
@@ -322,71 +285,63 @@ export default function GrievancesAdmin() {
     priorityFilter !== "all";
 
   return (
-    <section className="min-h-screen bg-slate-100 py-10">
-      <div className="page-x">
+    <section className="min-h-screen bg-[#361a0d] text-[#faebd7] relative isolate overflow-hidden">
+      {/* Retro ambient background */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#e68a45]/10 blur-3xl" />
+        <div className="absolute -right-24 top-0 h-96 w-96 rounded-full bg-[#d4a373]/10 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#faebd7]/10 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(#faebd7_1px,transparent_1px)] [background-size:12px_12px]" />
+      </div>
+
+      <div className="mx-auto max-w-[1600px] px-6 py-12 sm:px-10 lg:px-12 space-y-10">
+        
         {/* ================= HEADER ================= */}
-
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-6 rounded-[28px] border-[3px] border-[#221208] bg-[#4a2512] p-8 text-[#faebd7] shadow-[10px_10px_0_rgba(34,18,8,0.3)] sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold text-emerald-600">
-              ADMIN
-            </p>
+            <div className="inline-flex items-center gap-2 rounded-xl border-[2px] border-[#221208] bg-[#faebd7] px-4 py-1.5 text-xs font-black text-[#221208] shadow-[3px_3px_0_#221208] uppercase tracking-wider mb-3">
+              <Sparkles size={14} className="text-[#e68a45]" />
+              <span>Grievances Control 📋</span>
+            </div>
 
-            <h1 className="mt-1 text-3xl font-bold text-slate-900">
-              Grievances
+            <h1 className="text-3xl font-black tracking-tight text-[#faebd7] sm:text-4xl">
+              Grievances Management
             </h1>
 
-            <p className="mt-2 text-sm text-slate-500">
-              Review, assign and manage citizen grievances.
+            <p className="mt-2 text-sm sm:text-base font-medium leading-relaxed text-[#eddcd2]">
+              Review, assign and manage citizen grievances efficiently.
             </p>
           </div>
 
-          <Button
+          <button
             type="button"
-            variant="outline"
             onClick={loadGrievances}
             disabled={loading}
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border-[2px] border-[#221208] bg-[#e68a45] px-6 py-3.5 text-xs font-black text-[#221208] shadow-[4px_4px_0_#221208] transition-all hover:-translate-y-0.5 hover:bg-[#f4a261] disabled:opacity-60"
           >
             <RefreshCw
               className={`h-4 w-4 ${
                 loading ? "animate-spin" : ""
               }`}
+              strokeWidth={2.5}
             />
             Refresh
-          </Button>
+          </button>
         </div>
 
         {/* ================= ERROR ================= */}
-
         {error && (
-          <div className="mt-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
-
-            <div className="flex-1">
-              <p className="font-semibold">
-                Something went wrong
-              </p>
-
-              <p className="mt-1">{error}</p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setError("")}
-              className="rounded-lg p-1 hover:bg-red-100"
-              aria-label="Dismiss error"
-            >
-              <X className="h-4 w-4" />
-            </button>
+          <div className="rounded-[24px] border-[3px] border-[#221208] bg-red-100 p-6 text-red-900 shadow-[8px_8px_0_rgba(34,18,8,0.3)]">
+            <p className="font-black">Error</p>
+            <p className="mt-1 text-sm font-semibold">{error}</p>
           </div>
         )}
 
         {/* ================= FILTERS ================= */}
-
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="grid gap-3 md:grid-cols-3">
+        <div className="rounded-[24px] border-[3px] border-[#221208] bg-[#faebd7] p-6 text-[#221208] shadow-[8px_8px_0_rgba(34,18,8,0.3)]">
+          <div className="grid gap-4 md:grid-cols-3">
             <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4a2512]" />
 
               <input
                 type="search"
@@ -395,7 +350,7 @@ export default function GrievancesAdmin() {
                   setSearch(event.target.value)
                 }
                 placeholder="Search ticket, citizen, subject..."
-                className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100"
+                className="h-11 w-full rounded-xl border-2 border-[#221208] bg-white pl-11 pr-4 text-sm font-semibold text-[#221208] outline-none transition focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45]"
               />
             </div>
 
@@ -404,17 +359,11 @@ export default function GrievancesAdmin() {
               onChange={(event) =>
                 setStatusFilter(event.target.value)
               }
-              className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+              className="h-11 rounded-xl border-2 border-[#221208] bg-white px-4 text-sm font-black text-[#221208] outline-none focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45] cursor-pointer"
             >
-              <option value="all">
-                All statuses
-              </option>
-
+              <option value="all">All statuses</option>
               {STATUS_OPTIONS.map((status) => (
-                <option
-                  key={status}
-                  value={status}
-                >
+                <option key={status} value={status}>
                   {formatStatus(status)}
                 </option>
               ))}
@@ -425,17 +374,11 @@ export default function GrievancesAdmin() {
               onChange={(event) =>
                 setPriorityFilter(event.target.value)
               }
-              className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+              className="h-11 rounded-xl border-2 border-[#221208] bg-white px-4 text-sm font-black text-[#221208] outline-none focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45] cursor-pointer"
             >
-              <option value="all">
-                All priorities
-              </option>
-
+              <option value="all">All priorities</option>
               {PRIORITY_OPTIONS.map((priority) => (
-                <option
-                  key={priority}
-                  value={priority}
-                >
+                <option key={priority} value={priority}>
                   {formatPriority(priority)}
                 </option>
               ))}
@@ -444,32 +387,27 @@ export default function GrievancesAdmin() {
         </div>
 
         {/* ================= SUMMARY ================= */}
-
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-[24px] border-[3px] border-[#221208] bg-[#faebd7] p-6 text-[#221208] shadow-[8px_8px_0_rgba(34,18,8,0.3)]">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500">
+              <p className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#5a321a]">
                 Total
               </p>
-
-              <ClipboardList className="h-5 w-5 text-slate-400" />
+              <ClipboardList className="h-5 w-5 text-[#4a2512]" />
             </div>
-
-            <p className="mt-2 text-2xl font-bold text-slate-900">
+            <p className="mt-3 text-3xl font-black text-[#221208]">
               {grievances.length}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-[24px] border-[3px] border-[#221208] bg-[#faebd7] p-6 text-[#221208] shadow-[8px_8px_0_rgba(34,18,8,0.3)]">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500">
+              <p className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#5a321a]">
                 Open
               </p>
-
-              <Clock3 className="h-5 w-5 text-amber-500" />
+              <Clock3 className="h-5 w-5 text-amber-700" />
             </div>
-
-            <p className="mt-2 text-2xl font-bold text-slate-900">
+            <p className="mt-3 text-3xl font-black text-[#221208]">
               {
                 grievances.filter(
                   (item) =>
@@ -481,35 +419,30 @@ export default function GrievancesAdmin() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-[24px] border-[3px] border-[#221208] bg-[#faebd7] p-6 text-[#221208] shadow-[8px_8px_0_rgba(34,18,8,0.3)]">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500">
+              <p className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#5a321a]">
                 Urgent
               </p>
-
-              <AlertCircle className="h-5 w-5 text-red-500" />
+              <AlertCircle className="h-5 w-5 text-red-600" />
             </div>
-
-            <p className="mt-2 text-2xl font-bold text-slate-900">
+            <p className="mt-3 text-3xl font-black text-[#221208]">
               {
                 grievances.filter(
-                  (item) =>
-                    item.priority === "urgent"
+                  (item) => item.priority === "urgent"
                 ).length
               }
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-[24px] border-[3px] border-[#221208] bg-[#faebd7] p-6 text-[#221208] shadow-[8px_8px_0_rgba(34,18,8,0.3)]">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500">
+              <p className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#5a321a]">
                 Resolved
               </p>
-
-              <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+              <CheckCircle2 className="h-5 w-5 text-emerald-700" />
             </div>
-
-            <p className="mt-2 text-2xl font-bold text-slate-900">
+            <p className="mt-3 text-3xl font-black text-[#221208]">
               {
                 grievances.filter(
                   (item) =>
@@ -522,218 +455,162 @@ export default function GrievancesAdmin() {
         </div>
 
         {/* ================= TABLE ================= */}
-
-        <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="rounded-[28px] border-[3px] border-[#221208] bg-[#faebd7] p-8 text-[#221208] shadow-[12px_12px_0_rgba(34,18,8,0.3)]">
           {loading ? (
             <div className="flex min-h-[300px] items-center justify-center">
-              <div className="flex items-center gap-3 text-sm text-slate-500">
-                <Loader2 className="h-5 w-5 animate-spin" />
+              <div className="flex items-center gap-3 text-sm font-black text-[#221208]">
+                <Loader2 className="h-6 w-6 animate-spin text-[#4a2512]" />
                 Loading grievances...
               </div>
             </div>
           ) : filteredGrievances.length === 0 ? (
-            <div className="p-5">
-              <EmptyState
-                hasFilters={hasFilters}
-              />
-            </div>
+            <EmptyState hasFilters={hasFilters} />
           ) : (
             <>
               {/* Desktop */}
-
               <div className="hidden overflow-x-auto md:block">
                 <table className="min-w-full">
-                  <thead className="border-b border-slate-200 bg-slate-50">
+                  <thead className="border-b-2 border-[#221208]/20 bg-[#4a2512] text-[#faebd7]">
                     <tr>
-                      <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      <th className="px-5 py-4 text-left text-xs font-black uppercase tracking-wider">
                         Ticket
                       </th>
-
-                      <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      <th className="px-5 py-4 text-left text-xs font-black uppercase tracking-wider">
                         Citizen
                       </th>
-
-                      <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      <th className="px-5 py-4 text-left text-xs font-black uppercase tracking-wider">
                         Grievance
                       </th>
-
-                      <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      <th className="px-5 py-4 text-left text-xs font-black uppercase tracking-wider">
                         Priority
                       </th>
-
-                      <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      <th className="px-5 py-4 text-left text-xs font-black uppercase tracking-wider">
                         Status
                       </th>
-
-                      <th className="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      <th className="px-5 py-4 text-right text-xs font-black uppercase tracking-wider">
                         Action
                       </th>
                     </tr>
                   </thead>
 
-                  <tbody className="divide-y divide-slate-100">
-                    {filteredGrievances.map(
-                      (grievance) => (
-                        <tr
-                          key={grievance.id}
-                          className="transition hover:bg-slate-50"
-                        >
-                          <td className="px-5 py-4 align-top">
-                            <p className="font-semibold text-slate-900">
-                              {grievance.ticket_number}
-                            </p>
+                  <tbody className="divide-y-2 divide-[#221208]/15">
+                    {filteredGrievances.map((grievance) => (
+                      <tr
+                        key={grievance.id}
+                        className="transition hover:bg-[#fff5eb]"
+                      >
+                        <td className="px-5 py-4 align-top">
+                          <p className="font-black text-[#221208]">
+                            {grievance.ticket_number}
+                          </p>
+                          <p className="mt-1 text-xs font-semibold text-[#5a321a]">
+                            {formatDate(grievance.submitted_at)}
+                          </p>
+                        </td>
 
-                            <p className="mt-1 text-xs text-slate-400">
-                              {formatDate(
-                                grievance.submitted_at
-                              )}
-                            </p>
-                          </td>
+                        <td className="px-5 py-4 align-top">
+                          <p className="font-bold text-[#221208]">
+                            {grievance.name}
+                          </p>
+                          <p className="mt-1 text-xs font-medium text-[#5a321a]">
+                            {grievance.mobile ||
+                              grievance.email ||
+                              "No contact"}
+                          </p>
+                        </td>
 
-                          <td className="px-5 py-4 align-top">
-                            <p className="font-medium text-slate-800">
-                              {grievance.name}
-                            </p>
+                        <td className="max-w-xs px-5 py-4 align-top">
+                          <p className="font-bold text-[#221208]">
+                            {grievance.subject || grievance.category}
+                          </p>
+                          <p className="mt-1 truncate text-xs font-medium text-[#5a321a]">
+                            {grievance.description}
+                          </p>
+                        </td>
 
-                            <p className="mt-1 text-xs text-slate-500">
-                              {grievance.mobile ||
-                                grievance.email ||
-                                "No contact"}
-                            </p>
-                          </td>
+                        <td className="px-5 py-4 align-top">
+                          <PriorityBadge priority={grievance.priority} />
+                        </td>
 
-                          <td className="max-w-xs px-5 py-4 align-top">
-                            <p className="font-medium text-slate-800">
-                              {grievance.subject ||
-                                grievance.category}
-                            </p>
+                        <td className="px-5 py-4 align-top">
+                          <StatusBadge status={grievance.status} />
+                        </td>
 
-                            <p className="mt-1 truncate text-xs text-slate-500">
-                              {grievance.description}
-                            </p>
-                          </td>
-
-                          <td className="px-5 py-4 align-top">
-                            <PriorityBadge
-                              priority={
-                                grievance.priority
-                              }
-                            />
-                          </td>
-
-                          <td className="px-5 py-4 align-top">
-                            <StatusBadge
-                              status={
-                                grievance.status
-                              }
-                            />
-                          </td>
-
-                          <td className="px-5 py-4 text-right align-top">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                openDetails(
-                                  grievance
-                                )
-                              }
-                              className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
-                            >
-                              <Eye className="h-4 w-4" />
-                              View
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                    )}
+                        <td className="px-5 py-4 text-right align-top">
+                          <button
+                            type="button"
+                            onClick={() => openDetails(grievance)}
+                            className="inline-flex items-center gap-2 rounded-xl border-2 border-[#221208] bg-white px-4 py-2 text-xs font-black text-[#221208] shadow-[3px_3px_0_#221208] transition hover:bg-[#e68a45]"
+                          >
+                            <Eye className="h-4 w-4" strokeWidth={2.5} />
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
 
               {/* Mobile */}
-
-              <div className="divide-y divide-slate-100 md:hidden">
-                {filteredGrievances.map(
-                  (grievance) => (
-                    <div
-                      key={grievance.id}
-                      className="p-5"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="font-semibold text-slate-900">
-                            {grievance.ticket_number}
-                          </p>
-
-                          <p className="mt-1 text-xs text-slate-400">
-                            {formatDate(
-                              grievance.submitted_at
-                            )}
-                          </p>
-                        </div>
-
-                        <PriorityBadge
-                          priority={
-                            grievance.priority
-                          }
-                        />
-                      </div>
-
-                      <div className="mt-4">
-                        <p className="font-medium text-slate-800">
-                          {grievance.subject ||
-                            grievance.category}
+              <div className="space-y-4 md:hidden">
+                {filteredGrievances.map((grievance) => (
+                  <div
+                    key={grievance.id}
+                    className="rounded-[20px] border-2 border-[#221208] bg-white p-5 text-[#221208] shadow-[4px_4px_0_#221208]"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="font-black text-[#221208]">
+                          {grievance.ticket_number}
                         </p>
-
-                        <p className="mt-1 text-sm text-slate-500">
-                          {grievance.name}
-                        </p>
-
-                        <p className="mt-2 line-clamp-2 text-sm text-slate-500">
-                          {grievance.description}
+                        <p className="mt-1 text-xs font-semibold text-[#5a321a]">
+                          {formatDate(grievance.submitted_at)}
                         </p>
                       </div>
-
-                      <div className="mt-4 flex items-center justify-between gap-3">
-                        <StatusBadge
-                          status={
-                            grievance.status
-                          }
-                        />
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            openDetails(
-                              grievance
-                            )
-                          }
-                          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700"
-                        >
-                          <Eye className="h-4 w-4" />
-                          View
-                        </button>
-                      </div>
+                      <PriorityBadge priority={grievance.priority} />
                     </div>
-                  )
-                )}
+
+                    <div className="mt-4">
+                      <p className="font-bold text-[#221208]">
+                        {grievance.subject || grievance.category}
+                      </p>
+                      <p className="mt-1 text-xs font-medium text-[#5a321a]">
+                        {grievance.name}
+                      </p>
+                      <p className="mt-2 line-clamp-2 text-xs font-medium text-[#5a321a]">
+                        {grievance.description}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between gap-3 pt-3 border-t-2 border-slate-100">
+                      <StatusBadge status={grievance.status} />
+                      <button
+                        type="button"
+                        onClick={() => openDetails(grievance)}
+                        className="inline-flex items-center gap-1.5 rounded-xl border-2 border-[#221208] bg-[#faebd7] px-3.5 py-2 text-xs font-black text-[#221208] shadow-[2px_2px_0_#221208]"
+                      >
+                        <Eye className="h-4 w-4" strokeWidth={2.5} />
+                        View
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </>
           )}
         </div>
 
         {/* ================= DETAILS MODAL ================= */}
-
         {selectedGrievance && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4">
-            <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
-              <div className="sticky top-0 flex items-start justify-between border-b border-slate-200 bg-white px-5 py-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+            <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border-[3px] border-[#221208] bg-[#faebd7] text-[#221208] shadow-[15px_15px_0_rgba(34,18,8,0.4)]">
+              <div className="sticky top-0 flex items-start justify-between border-b-2 border-[#221208]/20 bg-[#4a2512] px-6 py-5 text-[#faebd7]">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
-                    Grievance
+                  <p className="text-[10px] font-black uppercase tracking-wider text-[#e68a45]">
+                    Grievance Ticket
                   </p>
-
-                  <h2 className="mt-1 text-xl font-bold text-slate-900">
+                  <h2 className="mt-1 text-2xl font-black text-[#faebd7]">
                     {selectedGrievance.ticket_number}
                   </h2>
                 </div>
@@ -741,264 +618,195 @@ export default function GrievancesAdmin() {
                 <button
                   type="button"
                   onClick={closeDetails}
-                  className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-[#221208] bg-[#faebd7] text-[#221208] shadow-[3px_3px_0_#221208] transition hover:bg-[#e68a45]"
                   aria-label="Close grievance details"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-5 w-5" strokeWidth={2.5} />
                 </button>
               </div>
 
-              <div className="space-y-6 p-5">
+              <div className="space-y-6 p-6 sm:p-8">
                 {/* Citizen */}
-
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-2xl border-2 border-[#221208] bg-white p-5 shadow-[4px_4px_0_#221208]">
                   <div className="flex items-center gap-2">
-                    <UserRound className="h-5 w-5 text-slate-500" />
-
-                    <h3 className="font-semibold text-slate-900">
+                    <UserRound className="h-5 w-5 text-[#4a2512]" />
+                    <h3 className="font-black text-[#221208]">
                       Citizen information
                     </h3>
                   </div>
 
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  <div className="mt-4 grid gap-4 sm:grid-cols-2 text-xs sm:text-sm font-medium">
                     <div>
-                      <p className="text-xs text-slate-400">
-                        Name
-                      </p>
-
-                      <p className="mt-1 text-sm font-medium text-slate-800">
+                      <p className="font-black text-[#5a321a]">Name</p>
+                      <p className="mt-1 font-bold text-[#221208]">
                         {selectedGrievance.name}
                       </p>
                     </div>
 
                     <div>
-                      <p className="text-xs text-slate-400">
-                        Mobile
-                      </p>
-
-                      <p className="mt-1 flex items-center gap-2 text-sm font-medium text-slate-800">
-                        <Phone className="h-4 w-4 text-slate-400" />
-                        {selectedGrievance.mobile ||
-                          "—"}
+                      <p className="font-black text-[#5a321a]">Mobile</p>
+                      <p className="mt-1 flex items-center gap-2 font-bold text-[#221208]">
+                        <Phone className="h-4 w-4 text-[#e68a45]" />
+                        {selectedGrievance.mobile || "—"}
                       </p>
                     </div>
 
                     <div>
-                      <p className="text-xs text-slate-400">
-                        Email
-                      </p>
-
-                      <p className="mt-1 text-sm font-medium text-slate-800">
-                        {selectedGrievance.email ||
-                          "—"}
+                      <p className="font-black text-[#5a321a]">Email</p>
+                      <p className="mt-1 font-bold text-[#221208] break-all">
+                        {selectedGrievance.email || "—"}
                       </p>
                     </div>
 
                     <div>
-                      <p className="text-xs text-slate-400">
-                        Submitted
-                      </p>
-
-                      <p className="mt-1 text-sm font-medium text-slate-800">
-                        {formatDate(
-                          selectedGrievance.submitted_at
-                        )}
+                      <p className="font-black text-[#5a321a]">Submitted</p>
+                      <p className="mt-1 font-bold text-[#221208]">
+                        {formatDate(selectedGrievance.submitted_at)}
                       </p>
                     </div>
                   </div>
                 </div>
 
                 {/* Grievance */}
-
                 <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-lg font-semibold text-slate-900">
-                      {selectedGrievance.subject ||
-                        selectedGrievance.category}
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h3 className="text-lg font-black text-[#221208]">
+                      {selectedGrievance.subject || selectedGrievance.category}
                     </h3>
-
-                    <PriorityBadge
-                      priority={
-                        selectedGrievance.priority
-                      }
-                    />
-
-                    <StatusBadge
-                      status={
-                        selectedGrievance.status
-                      }
-                    />
+                    <PriorityBadge priority={selectedGrievance.priority} />
+                    <StatusBadge status={selectedGrievance.status} />
                   </div>
 
-                  <p className="mt-2 text-sm text-slate-500">
-                    Category:{" "}
-                    <span className="font-medium text-slate-700">
-                      {selectedGrievance.category}
-                    </span>
+                  <p className="mt-2 text-xs sm:text-sm font-medium text-[#5a321a]">
+                    Category: <span className="font-black text-[#221208]">{selectedGrievance.category}</span>
                   </p>
 
-                  <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
-                    <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                  <div className="mt-4 rounded-2xl border-2 border-[#221208] bg-white p-5 shadow-[4px_4px_0_#221208]">
+                    <p className="whitespace-pre-wrap text-xs sm:text-sm font-medium leading-relaxed text-[#221208]">
                       {selectedGrievance.description}
                     </p>
                   </div>
 
                   {selectedGrievance.location && (
-                    <div className="mt-4 flex items-start gap-2 text-sm text-slate-600">
-                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
-
-                      <span>
-                        {selectedGrievance.location}
-                      </span>
+                    <div className="mt-4 flex items-start gap-2 text-xs sm:text-sm font-bold text-[#5a321a]">
+                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#e68a45]" />
+                      <span>{selectedGrievance.location}</span>
                     </div>
                   )}
                 </div>
 
                 {/* Management */}
-
-                <div className="rounded-xl border border-emerald-100 bg-emerald-50/50 p-4">
-                  <h3 className="font-semibold text-slate-900">
+                <div className="rounded-2xl border-2 border-[#221208] bg-[#4a2512] p-6 text-[#faebd7] shadow-[6px_6px_0_#221208]">
+                  <h3 className="font-black text-base text-[#faebd7]">
                     Manage grievance
                   </h3>
 
                   <div className="mt-4 grid gap-4 sm:grid-cols-2">
                     <label className="block">
-                      <span className="text-sm font-medium text-slate-700">
+                      <span className="text-xs sm:text-sm font-black text-[#eddcd2]">
                         Status
                       </span>
-
                       <select
                         value={editStatus}
                         onChange={(event) =>
-                          setEditStatus(
-                            event.target.value
-                          )
+                          setEditStatus(event.target.value)
                         }
-                        className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                        className="mt-2 h-11 w-full rounded-xl border-2 border-[#221208] bg-white px-3 text-sm font-black text-[#221208] outline-none focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45] cursor-pointer"
                       >
-                        {STATUS_OPTIONS.map(
-                          (status) => (
-                            <option
-                              key={status}
-                              value={status}
-                            >
-                              {formatStatus(status)}
-                            </option>
-                          )
-                        )}
+                        {STATUS_OPTIONS.map((status) => (
+                          <option key={status} value={status}>
+                            {formatStatus(status)}
+                          </option>
+                        ))}
                       </select>
                     </label>
 
                     <label className="block">
-                      <span className="text-sm font-medium text-slate-700">
+                      <span className="text-xs sm:text-sm font-black text-[#eddcd2]">
                         Priority
                       </span>
-
                       <select
                         value={editPriority}
                         onChange={(event) =>
-                          setEditPriority(
-                            event.target.value
-                          )
+                          setEditPriority(event.target.value)
                         }
-                        className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                        className="mt-2 h-11 w-full rounded-xl border-2 border-[#221208] bg-white px-3 text-sm font-black text-[#221208] outline-none focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45] cursor-pointer"
                       >
-                        {PRIORITY_OPTIONS.map(
-                          (priority) => (
-                            <option
-                              key={priority}
-                              value={priority}
-                            >
-                              {formatPriority(
-                                priority
-                              )}
-                            </option>
-                          )
-                        )}
+                        {PRIORITY_OPTIONS.map((priority) => (
+                          <option key={priority} value={priority}>
+                            {formatPriority(priority)}
+                          </option>
+                        ))}
                       </select>
                     </label>
                   </div>
 
                   <label className="mt-4 block">
-                    <span className="text-sm font-medium text-slate-700">
+                    <span className="text-xs sm:text-sm font-black text-[#eddcd2]">
                       Assigned staff user ID
                     </span>
-
                     <input
                       type="text"
                       value={editAssignedTo}
                       onChange={(event) =>
-                        setEditAssignedTo(
-                          event.target.value
-                        )
+                        setEditAssignedTo(event.target.value)
                       }
                       placeholder="UUID of assigned admin/staff user"
-                      className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                      className="mt-2 h-11 w-full rounded-xl border-2 border-[#221208] bg-white px-3 text-sm font-semibold text-[#221208] outline-none focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45]"
                     />
-
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs font-medium text-[#d4a373]">
                       Leave blank to remove the current assignment.
                     </p>
                   </label>
                 </div>
 
                 {/* Existing timestamps */}
-
-                <div className="grid gap-3 text-sm sm:grid-cols-3">
-                  <div className="rounded-xl bg-slate-50 p-3">
-                    <p className="text-xs text-slate-400">
+                <div className="grid gap-3 text-xs sm:text-sm sm:grid-cols-3">
+                  <div className="rounded-xl border-2 border-[#221208] bg-white p-3.5 shadow-[3px_3px_0_#221208]">
+                    <p className="text-[10px] font-black uppercase tracking-wider text-[#5a321a]">
                       Acknowledged
                     </p>
-
-                    <p className="mt-1 font-medium text-slate-700">
-                      {formatDate(
-                        selectedGrievance.acknowledged_at
-                      )}
+                    <p className="mt-1 font-bold text-[#221208]">
+                      {formatDate(selectedGrievance.acknowledged_at)}
                     </p>
                   </div>
 
-                  <div className="rounded-xl bg-slate-50 p-3">
-                    <p className="text-xs text-slate-400">
+                  <div className="rounded-xl border-2 border-[#221208] bg-white p-3.5 shadow-[3px_3px_0_#221208]">
+                    <p className="text-[10px] font-black uppercase tracking-wider text-[#5a321a]">
                       Resolved
                     </p>
-
-                    <p className="mt-1 font-medium text-slate-700">
-                      {formatDate(
-                        selectedGrievance.resolved_at
-                      )}
+                    <p className="mt-1 font-bold text-[#221208]">
+                      {formatDate(selectedGrievance.resolved_at)}
                     </p>
                   </div>
 
-                  <div className="rounded-xl bg-slate-50 p-3">
-                    <p className="text-xs text-slate-400">
+                  <div className="rounded-xl border-2 border-[#221208] bg-white p-3.5 shadow-[3px_3px_0_#221208]">
+                    <p className="text-[10px] font-black uppercase tracking-wider text-[#5a321a]">
                       Closed
                     </p>
-
-                    <p className="mt-1 font-medium text-slate-700">
-                      {formatDate(
-                        selectedGrievance.closed_at
-                      )}
+                    <p className="mt-1 font-bold text-[#221208]">
+                      {formatDate(selectedGrievance.closed_at)}
                     </p>
                   </div>
                 </div>
               </div>
 
               {/* Modal footer */}
-
-              <div className="sticky bottom-0 flex flex-col-reverse gap-3 border-t border-slate-200 bg-white px-5 py-4 sm:flex-row sm:justify-end">
-                <Button
+              <div className="sticky bottom-0 flex flex-col-reverse gap-3 border-t-2 border-[#221208]/20 bg-[#faebd7] px-6 py-4 sm:flex-row sm:justify-end">
+                <button
                   type="button"
-                  variant="outline"
                   onClick={closeDetails}
                   disabled={Boolean(savingId)}
+                  className="rounded-xl border-2 border-[#221208] bg-white px-6 py-3 text-xs font-black text-[#221208] shadow-[3px_3px_0_#221208] transition hover:bg-slate-100 disabled:opacity-60"
                 >
                   Cancel
-                </Button>
+                </button>
 
-                <Button
+                <button
                   type="button"
                   onClick={saveChanges}
                   disabled={Boolean(savingId)}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#221208] bg-[#e68a45] px-8 py-3 text-xs font-black text-[#221208] shadow-[4px_4px_0_#221208] transition hover:bg-[#f4a261] disabled:opacity-60"
                 >
                   {savingId ? (
                     <>
@@ -1008,7 +816,7 @@ export default function GrievancesAdmin() {
                   ) : (
                     "Save Changes"
                   )}
-                </Button>
+                </button>
               </div>
             </div>
           </div>

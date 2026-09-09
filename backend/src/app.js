@@ -63,8 +63,15 @@ app.use(cookieParser());
 | Static Uploads (Added for Admin Device Image Uploads)
 |--------------------------------------------------------------------------
 */
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
+// Go up one level from src/ to backend/ and access /uploads
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+  },
+  express.static(path.join(__dirname, "uploads"))
+);
 /*
 |--------------------------------------------------------------------------
 | Logging
@@ -153,6 +160,20 @@ app.use(notFoundHandler);
 |--------------------------------------------------------------------------
 */
 
+
+/*
+|--------------------------------------------------------------------------
+| Security
+|--------------------------------------------------------------------------
+*/
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: false,
+  })
+);
 app.use(errorHandler);
 
 export default app;

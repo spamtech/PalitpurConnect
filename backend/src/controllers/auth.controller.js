@@ -250,19 +250,49 @@ export async function me(req, res, next) {
 
 export async function logout(req, res, next) {
   try {
-    /*
-     * Access tokens are stateless.
-     *
-     * The frontend should remove its stored access/refresh tokens
-     * after receiving this successful response.
-     *
-     * Refresh-token revocation can be added when the refresh-token
-     * endpoint is implemented.
-     */
-
     return res.status(200).json({
       success: true,
       message: "Logout successful",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get All Users (Admin)
+|--------------------------------------------------------------------------
+*/
+
+export async function getAllUsersAdmin(req, res, next) {
+  try {
+    const result = await query(
+      `
+        SELECT
+          id,
+          full_name,
+          email,
+          role,
+          email_verified,
+          is_active,
+          avatar_url,
+          phone,
+          address,
+          village,
+          district,
+          state,
+          last_login_at,
+          created_at,
+          updated_at
+        FROM users
+        ORDER BY created_at DESC
+      `
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: result.rows,
     });
   } catch (error) {
     next(error);

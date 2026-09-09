@@ -6,9 +6,10 @@ import {
   login,
   me,
   logout,
+  getAllUsersAdmin,
 } from "../controllers/auth.controller.js";
 
-import { authenticate } from "../middleware/auth.middleware.js";
+import { authenticate, isAdmin } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
@@ -67,6 +68,19 @@ router.post(
   "/logout",
   authenticate,
   logout
+);
+
+/*
+|--------------------------------------------------------------------------
+| Admin: Get All Users
+|--------------------------------------------------------------------------
+*/
+
+router.get(
+  "/admin/users",
+  authenticate,
+  isAdmin,
+  getAllUsersAdmin
 );
 
 export default router;

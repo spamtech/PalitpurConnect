@@ -1,4 +1,3 @@
-
 import { query } from "../config/database.js";
 import { generateTicketNumber } from "../utils/ticket.js";
 
@@ -87,7 +86,7 @@ export async function getCitizenGrievances(
 
 
 /* =========================================================
-   GET SINGLE GRIEVANCE
+   GET SINGLE GRIEVANCE BY ID
 ========================================================= */
 
 export async function getGrievanceById(id) {
@@ -119,6 +118,45 @@ export async function getGrievanceById(id) {
       LIMIT 1
     `,
     [id]
+  );
+
+  return result.rows[0] || null;
+}
+
+
+/* =========================================================
+   GET GRIEVANCE BY TICKET NUMBER (FOR PUBLIC TRACKING)
+========================================================= */
+
+export async function getGrievanceByTicketNumber(ticketNumber) {
+  const result = await query(
+    `
+      SELECT
+        id,
+        ticket_number,
+        citizen_id,
+        name,
+        mobile,
+        email,
+        category,
+        subject,
+        description,
+        location,
+        image_url,
+        status,
+        priority,
+        assigned_to,
+        submitted_at,
+        acknowledged_at,
+        resolved_at,
+        closed_at,
+        created_at,
+        updated_at
+      FROM grievances
+      WHERE ticket_number = $1
+      LIMIT 1
+    `,
+    [ticketNumber]
   );
 
   return result.rows[0] || null;
@@ -423,4 +461,3 @@ export async function getGrievanceUpdates(
 
   return result.rows;
 }
-

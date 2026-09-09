@@ -5,6 +5,7 @@ import {
   ClipboardList,
   Loader2,
   Users,
+  Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -73,22 +74,6 @@ export default function AdminDashboard() {
         setError("");
 
         const response = await api.getAdminDashboardStats();
-
-        // Expected API response:
-        //
-        // {
-        //   success: true,
-        //   message: "Dashboard statistics fetched successfully",
-        //   data: {
-        //     stats: {
-        //       announcements: 24,
-        //       directory: 48,
-        //       openGrievances: 12,
-        //       emergencyContacts: 8
-        //     }
-        //   }
-        // }
-
         const dashboardStats = response.data.stats;
 
         setStats([
@@ -113,22 +98,13 @@ export default function AdminDashboard() {
           {
             key: "emergencyContacts",
             label: "Emergency Contacts",
-            value: Number(
-              dashboardStats.emergencyContacts
-            ),
+            value: Number(dashboardStats.emergencyContacts),
             icon: AlertTriangle,
           },
         ]);
       } catch (err) {
-        console.error(
-          "Failed to load admin dashboard statistics:",
-          err
-        );
-
-        setError(
-          err.message ||
-            "Unable to load dashboard statistics."
-        );
+        console.error("Failed to load admin dashboard statistics:", err);
+        setError(err.message || "Unable to load dashboard statistics.");
       } finally {
         setLoading(false);
       }
@@ -138,55 +114,65 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <section className="min-h-screen bg-slate-100 py-10">
-      <div className="page-x">
-        {/* Header */}
-        <div className="mb-8">
-          <p className="text-sm font-semibold text-emerald-600">
-            ADMINISTRATION
-          </p>
+    <section className="min-h-screen bg-[#361a0d] text-[#faebd7] relative isolate overflow-hidden">
+      {/* Retro ambient background */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#e68a45]/10 blur-3xl" />
+        <div className="absolute -right-24 top-0 h-96 w-96 rounded-full bg-[#d4a373]/10 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#faebd7]/10 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(#faebd7_1px,transparent_1px)] [background-size:12px_12px]" />
+      </div>
 
-          <h1 className="mt-2 text-3xl font-bold text-slate-900 sm:text-4xl">
+      <div className="mx-auto max-w-[1600px] px-6 py-12 sm:px-10 lg:px-12">
+        {/* Header */}
+        <div className="mb-10 rounded-[28px] border-[3px] border-[#221208] bg-[#4a2512] p-8 text-[#faebd7] shadow-[10px_10px_0_rgba(34,18,8,0.3)]">
+          <div className="inline-flex items-center gap-2 rounded-xl border-[2px] border-[#221208] bg-[#faebd7] px-4 py-1.5 text-xs font-black text-[#221208] shadow-[3px_3px_0_#221208] uppercase tracking-wider mb-4">
+            <Sparkles size={14} className="text-[#e68a45]" />
+            <span>Administration Portal 🛡️</span>
+          </div>
+
+          <h1 className="text-3xl font-black tracking-tight text-[#faebd7] sm:text-5xl">
             Panchayat Dashboard
           </h1>
 
-          <p className="mt-3 text-sm text-slate-500">
-            Monitor and manage Palitpur civic services.
+          <p className="mt-3 text-sm sm:text-base font-medium leading-relaxed text-[#eddcd2]">
+            Monitor and manage Palitpur civic services, announcements, directory records, and public grievances in real-time.
           </p>
         </div>
 
         {/* Error */}
         {error && (
-          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
-            {error}
+          <div className="mb-8 rounded-[24px] border-[3px] border-[#221208] bg-red-100 p-6 text-red-900 shadow-[8px_8px_0_rgba(34,18,8,0.3)]">
+            <p className="font-black text-base">Unable to load dashboard statistics</p>
+            <p className="mt-1 text-sm font-semibold">{error}</p>
           </div>
         )}
 
-        {/* Statistics */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Statistics Grid */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => {
             const Icon = stat.icon;
 
             return (
               <div
                 key={stat.key}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                className="group relative overflow-hidden rounded-[24px] border-[3px] border-[#221208] bg-[#faebd7] p-6 text-[#221208] shadow-[8px_8px_0_rgba(34,18,8,0.3)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#fff5eb]"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                    <Icon className="h-5 w-5" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-[#221208] bg-[#e68a45] text-[#221208] shadow-[3px_3px_0_#221208] transition-transform group-hover:scale-110">
+                    <Icon className="h-6 w-6" strokeWidth={2.5} />
                   </div>
 
                   {loading ? (
-                    <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
+                    <Loader2 className="h-6 w-6 animate-spin text-[#4a2512]" />
                   ) : (
-                    <span className="text-2xl font-bold text-slate-900">
+                    <span className="text-3xl font-black text-[#221208]">
                       {stat.value}
                     </span>
                   )}
                 </div>
 
-                <p className="mt-4 text-sm text-slate-500">
+                <p className="mt-5 text-xs sm:text-sm font-black tracking-wider uppercase text-[#5a321a]">
                   {stat.label}
                 </p>
               </div>
@@ -194,30 +180,36 @@ export default function AdminDashboard() {
           })}
         </div>
 
-        {/* Management */}
-        <div className="mt-10">
-          <h2 className="text-xl font-bold text-slate-900">
-            Management
+        {/* Management Section */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-black tracking-tight text-[#faebd7] mb-6">
+            Management Controls ⚡
           </h2>
 
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2">
             {managementLinks.map((item) => (
               <Link
                 key={item.title}
                 to={item.href}
-                className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-emerald-200 hover:shadow-md"
+                className="group flex flex-col justify-between rounded-[24px] border-[3px] border-[#221208] bg-[#faebd7] p-6 text-[#221208] shadow-[8px_8px_0_rgba(34,18,8,0.3)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#fff5eb]"
               >
-                <h3 className="font-bold text-slate-900">
-                  {item.title}
-                </h3>
+                <div>
+                  <h3 className="text-lg font-black tracking-tight text-[#221208] group-hover:text-[#4a2512] transition-colors">
+                    {item.title}
+                  </h3>
 
-                <p className="mt-2 text-sm leading-6 text-slate-500">
-                  {item.description}
-                </p>
+                  <p className="mt-2 text-xs sm:text-sm font-medium leading-relaxed text-[#5a321a]">
+                    {item.description}
+                  </p>
+                </div>
 
-                <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-emerald-600">
-                  Manage
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <div className="mt-6 flex items-center justify-between border-t-2 border-[#221208]/15 pt-4">
+                  <span className="text-xs font-black text-[#4a2512] group-hover:text-[#e68a45] transition-colors">
+                    Open Control Panel
+                  </span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl border-2 border-[#221208] bg-[#e68a45] text-[#221208] shadow-[3px_3px_0_#221208] transition-transform group-hover:translate-x-1">
+                    <ArrowRight size={14} strokeWidth={2.5} />
+                  </span>
                 </div>
               </Link>
             ))}

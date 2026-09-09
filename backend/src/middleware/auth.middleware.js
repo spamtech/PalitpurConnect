@@ -39,3 +39,14 @@ export function authenticate(req, res, next) {
     );
   }
 }
+
+export function isAdmin(req, res, next) {
+  if (req.user && req.user.role === "admin") {
+    return next();
+  }
+  return errorResponse(
+    res,
+    "Access denied. Admin rights required.",
+    403
+  );
+}

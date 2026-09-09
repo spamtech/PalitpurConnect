@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import {
   ChevronRight,
@@ -10,17 +9,17 @@ import {
   UserPlus,
 } from "lucide-react";
 
-import Button from "../ui/Button";
-
 const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Villages", href: "#villages" },
-  { label: "Culture", href: "#culture" },
-  { label: "Map", href: "#map" },
+  { label: "হোম", href: "/" },
+  { label: "পাড়াসমূহ", href: "#villages" },
+  { label: "সংস্কৃতি ও ঐতিহ্য", href: "#culture" },
+  { label: "পালিতপুর মানচিত্র", href: "#map" },
 ];
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
@@ -30,6 +29,26 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
+  // Scroll listener to hide navbar on scroll down and show on scroll up
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down -> hide navbar
+        setShowNavbar(false);
+      } else {
+        // Scrolling up -> show navbar
+        setShowNavbar(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   const closeMobileMenu = () => {
     setMobileOpen(false);
   };
@@ -38,59 +57,49 @@ export default function Navbar() {
     <>
       {/* =========================
           DESKTOP / MAIN NAVBAR
-      ========================== */}
-      <header className="fixed inset-x-0 top-0 z-50 w-full border-b border-[#b8d85a]/20 bg-[#173528]/95 py-3 shadow-[0_10px_0_rgba(12,34,24,0.25)] backdrop-blur-xl">
+      ========================= */}
+      <header
+        className={[
+          "fixed inset-x-0 top-0 z-50 w-full border-b-[3px] border-[#0c2218] bg-[#173528]/95 py-3 shadow-[0_8px_0_rgba(12,34,24,0.18)] backdrop-blur-xl",
+          "transition-transform duration-300 ease-in-out",
+          showNavbar ? "translate-y-0" : "-translate-y-full",
+        ].join(" ")}
+      >
         <div className="w-full px-6 sm:px-12 lg:px-16">
           <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between">
 
             {/* Brand */}
             <a
-              href="#home"
+              href="/"
               onClick={closeMobileMenu}
-              className="group flex items-center gap-3 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-              aria-label="PalitpurConnect home"
+              className="group flex items-center gap-3.5 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b8d85a]"
+              aria-label="পালিতপুর কানেক্ট হোম"
             >
-              <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-700 text-[#f7f0d0] shadow-lg shadow-emerald-900/40 ring-2 ring-emerald-500/30 transition-transform duration-300 group-hover:scale-105">
-                <Sprout
-                  size={24}
-                  strokeWidth={2}
-                  className="text-[#d6ee87] transition-transform duration-300 group-hover:-rotate-6"
-                />
-
-                {/* Live status */}
-                <span
-                  className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[#173528] bg-[#b8d85a]"
-                  aria-label="Portal online"
-                >
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
-                </span>
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border-2 border-[#173528] bg-[#b8d85a] text-[#173528] shadow-[4px_4px_0_#173528] transition-transform duration-300 group-hover:-translate-y-1">
+                <Sprout size={24} strokeWidth={2.5} />
               </div>
 
               <div>
-                <div className="text-base font-black tracking-tight text-[#f7f0d0]">
-                  Palitpur
-                  <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
-                    Connect
-                  </span>{" "}
-                  🌾
+                <div className="text-lg font-black tracking-tight text-[#f7f0d0]">
+                  পালিতপুর <span className="text-[#b8d85a]">কানেক্ট</span> 🌾
                 </div>
 
-                <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#e6ad45]/90">
-                  ✦ Digital Village Portal ✦
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[#b07820]">
+                  ✦ ডিজিটাল গ্রাম পোর্টাল ✦
                 </div>
               </div>
             </a>
 
             {/* Desktop navigation */}
             <nav
-              className="hidden items-center gap-1 rounded-xl border-2 border-[#b8d85a]/20 bg-[#10281e] p-1.5 shadow-inner lg:flex"
-              aria-label="Primary navigation"
+              className="hidden items-center gap-1.5 rounded-2xl border-[3px] border-[#0c2218] bg-[#2d684d] p-1.5 shadow-[4px_4px_0_rgba(12,34,24,0.22)] lg:flex"
+              aria-label="প্রাথমিক নেভিগেশন"
             >
               {navItems.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
-                  className="rounded-xl px-4 py-2 text-xs font-bold text-[#e9e2c5] transition-all duration-300 hover:bg-[#b8d85a]/15 hover:text-[#c8e76a] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  className="rounded-xl border border-[#f7f0d0]/10 px-4 py-2 text-xs font-bold text-[#dfe8c4] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#b8d85a]/50 hover:bg-[#173528]/35 hover:text-[#b8d85a]"
                 >
                   {item.label}
                 </a>
@@ -99,23 +108,22 @@ export default function Navbar() {
 
             {/* Desktop actions */}
             <div className="hidden items-center gap-3 lg:flex">
-
               {/* Citizen Login */}
               <a
                 href="/login"
-                className="inline-flex items-center gap-2 rounded-2xl border-2 border-[#b8d85a]/25 bg-[#214636] px-4 py-2.5 text-xs font-bold text-[#f4efda] transition-all duration-300 hover:border-[#b8d85a]/60 hover:bg-[#b8d85a]/10 hover:text-[#d1ef72] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                className="group inline-flex items-center gap-2 rounded-2xl border-[2px] border-[#0c2218] bg-[#f7f0d0] px-4 py-2 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] transition-all hover:-translate-y-0.5 hover:bg-[#b8d85a] hover:shadow-[5px_5px_0_#0c2218] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b8d85a]"
               >
-                <LogIn size={16} />
-                Citizen Login
+                <LogIn size={15} />
+                নাগরিক লগইন
               </a>
 
               {/* Register */}
               <a
                 href="/register"
-                className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-[#e6ad45] via-[#c98d35] to-[#8f6528] px-4 py-2.5 text-xs font-bold text-[#f7f0d0] shadow-lg shadow-[#173528]/40 transition-all duration-300 hover:scale-[1.02] hover:from-[#f0bd5b] hover:to-[#b97825] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                className="group inline-flex items-center gap-2 rounded-2xl border-[2px] border-[#0c2218] bg-[#b8d85a] px-4 py-2 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] transition-all hover:-translate-y-0.5 hover:bg-[#e6ad45] hover:shadow-[5px_5px_0_#0c2218] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b8d85a]"
               >
-                <UserPlus size={16} />
-                Register
+                <UserPlus size={15} />
+                নিবন্ধন
               </a>
             </div>
 
@@ -125,13 +133,13 @@ export default function Navbar() {
               onClick={() => setMobileOpen((value) => !value)}
               aria-expanded={mobileOpen}
               aria-controls="mobile-navigation"
-              aria-label={mobileOpen ? "Close menu" : "Open menu"}
-              className="rounded-xl border border-[#b8d85a]/25 bg-[#214636]/70 p-2.5 text-[#e9e2c5] transition hover:bg-[#2d684d] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 lg:hidden"
+              aria-label={mobileOpen ? "মেনু বন্ধ করুন" : "মেনু খুলুন"}
+              className="rounded-xl border-[2px] border-[#0c2218] bg-[#2d684d] p-2.5 text-[#f7f0d0] shadow-[3px_3px_0_#0c2218] transition hover:bg-[#173528] lg:hidden"
             >
               {mobileOpen ? (
-                <X size={23} className="text-[#e6ad45]" />
+                <X size={22} className="text-[#e6ad45]" />
               ) : (
-                <Menu size={23} />
+                <Menu size={22} />
               )}
             </button>
           </div>
@@ -140,12 +148,12 @@ export default function Navbar() {
 
       {/* =========================
           MOBILE NAVIGATION
-      ========================== */}
+      ========================= */}
       <div
         id="mobile-navigation"
         className={[
           "fixed inset-0 z-40 lg:hidden",
-          "transition-all duration-500 ease-in-out",
+          "transition-all duration-300 ease-in-out",
           mobileOpen
             ? "visible opacity-100"
             : "invisible pointer-events-none opacity-0",
@@ -154,11 +162,11 @@ export default function Navbar() {
         {/* Backdrop */}
         <button
           type="button"
-          aria-label="Close navigation menu"
+          aria-label="নেভিগেশন মেনু বন্ধ করুন"
           onClick={closeMobileMenu}
           className={[
-            "absolute inset-0 w-full bg-[#10281e]/85 backdrop-blur-md",
-            "transition-opacity duration-500",
+            "absolute inset-0 w-full bg-[#0c2218]/80 backdrop-blur-md",
+            "transition-opacity duration-300",
             mobileOpen ? "opacity-100" : "opacity-0",
           ].join(" ")}
         />
@@ -167,56 +175,61 @@ export default function Navbar() {
         <aside
           className={[
             "absolute right-0 top-0 h-full w-[min(92vw,400px)]",
-            "border-l-2 border-[#b8d85a]/30 bg-gradient-to-b from-[#173528] via-[#1b3d2c] to-[#10281e] text-[#f7f0d0] shadow-[-18px_0_50px_rgba(10,28,19,0.45)]",
-            "transition-transform duration-500 ease-out",
+            "border-l-[3px] border-[#0c2218] bg-[#173528] text-[#f7f0d0] shadow-[-18px_0_50px_rgba(12,34,24,0.45)]",
+            "transition-transform duration-300 ease-out",
             mobileOpen ? "translate-x-0" : "translate-x-full",
           ].join(" ")}
-          aria-label="Mobile navigation"
+          aria-label="মোবাইল নেভিগেশন"
         >
-          <div className="relative flex h-full flex-col overflow-hidden bg-[radial-gradient(circle_at_1px_1px,rgba(247,240,208,0.10)_1px,transparent_1.5px)] [background-size:18px_18px]">
-            <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-[#b8d85a]/10 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-[#e6ad45]/10 blur-3xl" />
+          {/* Retro ambient background */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#b8d85a]/10 blur-3xl" />
+            <div className="absolute -right-24 top-0 h-96 w-96 rounded-full bg-[#e6ad45]/10 blur-3xl" />
+            <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(#f7f0d0_1px,transparent_1px)] [background-size:12px_12px]" />
+          </div>
 
+          <div className="relative flex h-full flex-col overflow-hidden">
             {/* Drawer header */}
-            <div className="relative flex h-24 items-center justify-between border-b border-[#b8d85a]/20 bg-[#173528]/95 px-6 shadow-[0_5px_0_rgba(12,34,24,0.22)]">
+            <div className="relative flex h-24 items-center justify-between border-b-[3px] border-[#0c2218] bg-[#f7f0d0] px-6 text-[#173528] shadow-[0_5px_0_rgba(12,34,24,0.18)]">
               <div>
-                <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#e6ad45]">Digital Village Portal</div>
-                <div className="font-black text-lg text-[#f7f0d0]">
-                Palitpur
-                <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
-                  Connect
-                </span>{" "}
-                🌾
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[#b07820]">✦ ডিজিটাল গ্রাম পোর্টাল ✦</div>
+                <div className="text-lg font-black tracking-tight">
+                  পালিতপুর <span className="text-[#2d684d]">কানেক্ট</span> 🌾
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={closeMobileMenu}
-                aria-label="Close menu"
-                className="rounded-xl border border-[#b8d85a]/15 p-2 text-[#c8c1a5] hover:bg-[#214636] hover:text-[#fff6d2] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                aria-label="মেনু বন্ধ করুন"
+                className="rounded-xl border-2 border-[#173528] bg-[#b8d85a] p-2 text-[#173528] shadow-[3px_3px_0_#173528] transition hover:bg-[#e6ad45]"
               >
-                <X size={21} className="text-[#e6ad45]" />
+                <X size={20} />
               </button>
             </div>
 
             {/* Navigation */}
             <nav
-              className="relative flex-1 overflow-y-auto px-5 py-7"
-              aria-label="Mobile navigation"
+              className="relative flex-1 overflow-y-auto px-6 py-6"
+              aria-label="মোবাইল নেভিগেশন"
             >
               <div className="space-y-3">
-                <p className="mb-4 px-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#c8c1a5]">Explore Palitpur</p>
+                <p className="mb-3 text-xs font-black uppercase tracking-widest text-[#e6ad45] flex items-center gap-2">
+                  <Sparkles size={14} /> পালিতপুর ঘুরে দেখুন
+                </p>
                 {navItems.map((item) => (
                   <a
                     key={item.href}
                     href={item.href}
                     onClick={closeMobileMenu}
-                    className="group flex items-center justify-between rounded-2xl border-2 border-[#b8d85a]/15 bg-[#f7f0d0]/[0.055] px-4 py-4 text-base font-bold text-[#e9e2c5] shadow-[5px_5px_0_rgba(12,34,24,0.22)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#b8d85a]/45 hover:bg-[#2d684d]/90 hover:text-[#f7f0d0] hover:shadow-[6px_6px_0_rgba(12,34,24,0.28)]"
+                    className="group flex items-center justify-between rounded-xl border-[2px] border-[#0c2218] bg-[#2d684d] px-4 py-3 text-sm font-bold text-[#f7f0d0] shadow-[4px_4px_0_#0c2218] transition-all hover:-translate-y-0.5 hover:bg-[#173528]"
                   >
-                    <span>{item.label}</span>
+                    <span className="flex items-center gap-3">
+                      <span className="h-2 w-2 rounded-full bg-[#b8d85a] transition-transform group-hover:scale-125" />
+                      {item.label}
+                    </span>
                     <ChevronRight
-                      size={17}
+                      size={16}
                       className="text-[#e6ad45] transition-transform duration-300 group-hover:translate-x-1"
                     />
                   </a>
@@ -224,46 +237,39 @@ export default function Navbar() {
               </div>
 
               {/* Portal status */}
-              <div className="mt-8 rounded-3xl border-2 border-[#b8d85a]/20 bg-gradient-to-br from-[#2d684d] via-[#214636] to-[#173528] p-5 shadow-[7px_7px_0_rgba(12,34,24,0.22)]">
+              <div className="mt-8 rounded-2xl border-2 border-[#0c2218] bg-[#f7f0d0] p-4 text-[#173528] shadow-[4px_4px_0_#0c2218]">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#b8d85a]/15 text-[#c8e76a] ring-1 ring-[#b8d85a]/35">
-                    <Sparkles size={18} className="animate-pulse" />
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#b8d85a] text-[#173528]">
+                    <Sparkles size={16} className="animate-pulse" />
                   </span>
-
                   <div>
-                    <p className="text-sm font-bold text-[#f7f0d0]">
-                      Portal Online 🌟
-                    </p>
-
-                    <p className="text-xs text-[#c8c1a5]">
-                      Civic services available 24/7
-                    </p>
+                    <p className="text-xs font-black">পোর্টাল অনলাইন</p>
+                    <p className="mt-0.5 text-[11px] font-semibold text-[#58705e]">২৪/৭ ডিজিটাল পরিষেবা উপলব্ধ</p>
                   </div>
                 </div>
               </div>
             </nav>
 
             {/* Mobile actions */}
-            <div className="relative space-y-3 border-t-2 border-[#b8d85a]/15 bg-[#10281e]/95 p-6 shadow-[0_-6px_0_rgba(12,34,24,0.12)]">
-
+            <div className="relative space-y-3 border-t-[3px] border-[#0c2218] bg-[#10281e] p-6 shadow-[0_-6px_0_rgba(12,34,24,0.12)]">
               {/* Login */}
               <a
                 href="/login"
                 onClick={closeMobileMenu}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#b8d85a]/25 bg-[#214636] py-3 font-bold text-[#f4efda] transition hover:border-[#b8d85a]/60 hover:bg-[#2d684d] hover:text-[#d6ee87]"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border-[2px] border-[#0c2218] bg-[#f7f0d0] py-3 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] transition hover:bg-[#b8d85a]"
               >
-                <LogIn size={17} />
-                Citizen Login
+                <LogIn size={16} />
+                নাগরিক লগইন
               </a>
 
               {/* Register */}
               <a
                 href="/register"
                 onClick={closeMobileMenu}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#e6ad45] via-[#c98d35] to-[#8f6528] py-3 font-bold text-[#f7f0d0] shadow-[6px_6px_0_rgba(12,34,24,0.28)] transition hover:from-[#f0bd5b] hover:to-[#b97825]"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border-[2px] border-[#0c2218] bg-[#b8d85a] py-3 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] transition hover:bg-[#e6ad45]"
               >
-                <UserPlus size={17} />
-                Register
+                <UserPlus size={16} />
+                নিবন্ধন
               </a>
             </div>
           </div>
@@ -272,4 +278,3 @@ export default function Navbar() {
     </>
   );
 }
-
