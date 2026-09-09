@@ -28,11 +28,17 @@ const app = express();
 |--------------------------------------------------------------------------
 */
 
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: false,
+  })
+);
 
 app.use(
   cors({
-    origin: env.clientUrl,
+    origin: [env.clientUrl, "https://palitpurconnect-frontend.onrender.com", "http://localhost:5173"],
     credentials: true,
   })
 );
@@ -160,20 +166,6 @@ app.use(notFoundHandler);
 |--------------------------------------------------------------------------
 */
 
-
-/*
-|--------------------------------------------------------------------------
-| Security
-|--------------------------------------------------------------------------
-*/
-
-app.use(
-  helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-    crossOriginEmbedderPolicy: false,
-    contentSecurityPolicy: false,
-  })
-);
 app.use(errorHandler);
 
 export default app;
