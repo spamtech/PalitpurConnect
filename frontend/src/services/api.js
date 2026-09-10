@@ -31,6 +31,7 @@ async function request(endpoint, options = {}) {
     {
       ...options,
       headers,
+      credentials: "include", // Required to send the Google session cookie
     }
   );
 
@@ -253,7 +254,7 @@ export const api = {
   |--------------------------------------------------------------------------
   */
 
-  getAdminGrievances: () =>
+ getAdminGrievances: () =>
     request("/admin/grievances", {
       method: "GET",
     }),
@@ -264,6 +265,10 @@ export const api = {
       body: JSON.stringify(payload),
     }),
 
+  deleteAdminGrievance: (id) =>
+    request(`/admin/grievances/${id}`, {
+      method: "DELETE",
+    }),
   /*
   |--------------------------------------------------------------------------
   | CITIZEN GRIEVANCES

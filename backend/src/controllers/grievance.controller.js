@@ -24,7 +24,8 @@ export async function submitGrievance(req, res, next) {
 
     const grievance = await createGrievance({
       ...data,
-      citizenId: req.user.id,
+      citizenId: req.user ? req.user.id : null,
+      email: req.body.email || req.user?.email || null, // Ensure email is passed here
     });
 
     return successResponse(

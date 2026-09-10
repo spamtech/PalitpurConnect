@@ -3,6 +3,12 @@ import { errorResponse } from "../utils/response.js";
 
 export function authenticate(req, res, next) {
   try {
+    // 1. Check if authenticated via Google OAuth (Passport Session)
+    if (req.isAuthenticated && req.isAuthenticated() && req.user) {
+      return next();
+    }
+
+    // 2. Fall back to JWT Bearer Token (Email/Password login)
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

@@ -1,3 +1,4 @@
+
 import {
   createContext,
   useContext,
@@ -23,33 +24,66 @@ export function AuthProvider({ children }) {
       const token = localStorage.getItem(ACCESS_TOKEN_KEY);
       const storedUser = localStorage.getItem(USER_STORAGE_KEY);
 
-      if (!token) {
-        setLoading(false);
-        return;
+      // Show cached user immediately if available.
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch {
+          localStorage.removeItem(USER_STORAGE_KEY);
+        }
       }
 
       try {
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-
+        /*
+         * IMPORTANT:
+         *
+         * Always call /auth/me.
+         *
+         * Normal login may authenticate with a JWT.
+         * Google OAuth authenticates with the Express session cookie.
+         *
+         * api.js already uses:
+         * credentials: "include"
+         *
+         * so the Google session cookie will be sent here.
+         */
         const response = await api.me();
 
-        const currentUser = response.user || response.data?.user;
+        const currentUser =
+          response.user ||
+          response.data?.user ||
+          null;
 
         if (currentUser) {
           setUser(currentUser);
+
           localStorage.setItem(
             USER_STORAGE_KEY,
             JSON.stringify(currentUser)
           );
+        } else {
+          setUser(null);
+          localStorage.removeItem(USER_STORAGE_KEY);
         }
       } catch (error) {
-        console.error("Session restore failed:", error);
+        /*
+         * A 401 simply means there is no valid session.
+         * This is normal for a guest visiting the website.
+         */
+        if (
+          !error.message?.toLowerCase().includes("authentication required")
+        ) {
+          console.error("Session restore failed:", error);
+        }
 
+        /*
+         * Only clear local JWT/session cache when authentication
+         * actually failed.
+         */
         localStorage.removeItem(ACCESS_TOKEN_KEY);
         localStorage.removeItem(REFRESH_TOKEN_KEY);
         localStorage.removeItem(USER_STORAGE_KEY);
+
         setUser(null);
       } finally {
         setLoading(false);
@@ -61,17 +95,17 @@ export function AuthProvider({ children }) {
 
   const login = (authData) => {
     const accessToken =
-      authData.accessToken ||
-      authData.data?.accessToken ||
-      authData.token;
+      authData?.accessToken ||
+      authData?.data?.accessToken ||
+      authData?.token;
 
     const refreshToken =
-      authData.refreshToken ||
-      authData.data?.refreshToken;
+      authData?.refreshToken ||
+      authData?.data?.refreshToken;
 
     const loggedInUser =
-      authData.user ||
-      authData.data?.user;
+      authData?.user ||
+      authData?.data?.user;
 
     if (accessToken) {
       localStorage.setItem(

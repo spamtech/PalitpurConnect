@@ -1,5 +1,6 @@
 import { query } from "../config/database.js";
 import { generateTicketNumber } from "../utils/ticket.js";
+import { sendGrievanceConfirmation } from "./email.service.js";
 
 /* =========================================================
    CREATE GRIEVANCE
@@ -8,6 +9,7 @@ import { generateTicketNumber } from "../utils/ticket.js";
 export async function createGrievance({
   citizenId,
   name,
+  email,
   mobile,
   category,
   description,
@@ -21,26 +23,39 @@ export async function createGrievance({
         ticket_number,
         citizen_id,
         name,
+        email,
         mobile,
         category,
         description,
         status
       )
       VALUES
-      ($1, $2, $3, $4, $5, $6, 'submitted')
+      ($1, $2, $3, $4, $5, $6, $7, 'submitted')
       RETURNING *
     `,
     [
       ticketNumber,
       citizenId || null,
       name,
+      email || null,
       mobile || null,
       category,
       description,
     ]
   );
 
-  return result.rows[0];
+  const grievance = result.rows[0];
+
+  // Send confirmation email if email is provided
+  if (email) {
+    try {
+      await sendGrievanceConfirmation(email, name, ticketNumber, category);
+    } catch (emailError) {
+      console.error("Failed to send grievance submission email:", emailError);
+    }
+  }
+
+  return grievance;
 }
 
 

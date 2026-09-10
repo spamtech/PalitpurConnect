@@ -147,14 +147,14 @@ export default function AnnouncementsPage() {
               </h1>
 
               <p className="mt-4 text-base leading-relaxed text-[#dfe8c4] sm:text-lg font-medium">
-                পালিতপুরকানেক্ট সাম্প্রদায়িক সম্প্রীতি এবং ভাগ করা সমৃদ্ধির অধীনে প্রতিটি বাসিন্দার কাছে সরাসরি রিয়েল-টাইম পঞ্চায়েত ঘোষণা, জনসার্কুলার, গ্রামের প্রোগ্রাম এবং গুরুত্বপূর্ণ প্রশাসনিক আপডেট নিয়ে আসে।
+                পালিতপুর কানেক্ট সাম্প্রদায়িক সম্প্রীতি এবং ভাগ করা সমৃদ্ধির অধীনে প্রতিটি বাসিন্দার কাছে সরাসরি রিয়েল-টাইম পঞ্চায়েত ঘোষণা, জনসার্কুলার, গ্রামের প্রোগ্রাম এবং গুরুত্বপূর্ণ প্রশাসনিক আপডেট নিয়ে আসে।
               </p>
 
               {/* Trust Points */}
               <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="flex items-center gap-2.5 text-xs font-bold text-[#f7f0d0] bg-[#2d684d] p-3 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-[#173528] bg-[#b8d85a] text-[#173528] font-black">✓</span>
-                  পঞ্চায়েত যাচাইকৃত
+                  গ্রাম যাচাইকৃত
                 </div>
                 <div className="flex items-center gap-2.5 text-xs font-bold text-[#f7f0d0] bg-[#2d684d] p-3 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-[#173528] bg-[#b8d85a] text-[#173528] font-black">✓</span>

@@ -12,6 +12,7 @@ import {
   UserRound,
   X,
   Sparkles,
+  Trash2,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -134,6 +135,7 @@ export default function GrievancesAdmin() {
   const [grievances, setGrievances] = useState([]);
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
   const [error, setError] = useState("");
 
   const [search, setSearch] = useState("");
@@ -279,13 +281,37 @@ export default function GrievancesAdmin() {
     }
   };
 
+  const deleteGrievance = async (id, ticketNumber) => {
+    if (!window.confirm(`Are you sure you want to delete grievance ticket ${ticketNumber}?`)) {
+      return;
+    }
+
+    try {
+      setDeletingId(id);
+      setError("");
+
+      await api.deleteAdminGrievance(id);
+
+      setGrievances((current) => current.filter((item) => item.id !== id));
+
+      if (selectedGrievance && selectedGrievance.id === id) {
+        closeDetails();
+      }
+    } catch (err) {
+      console.error("Failed to delete grievance:", err);
+      setError(err.message || "Unable to delete grievance.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const hasFilters =
     Boolean(search.trim()) ||
     statusFilter !== "all" ||
     priorityFilter !== "all";
 
   return (
-    <section className="min-h-screen bg-[#361a0d] text-[#faebd7] relative isolate overflow-hidden">
+    <section className="min-h-screen bg-[#361a0d] text-[#faebd7] relative overflow-x-hidden">
       {/* Retro ambient background */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#e68a45]/10 blur-3xl" />
@@ -294,7 +320,7 @@ export default function GrievancesAdmin() {
         <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(#faebd7_1px,transparent_1px)] [background-size:12px_12px]" />
       </div>
 
-      <div className="mx-auto max-w-[1600px] px-6 py-12 sm:px-10 lg:px-12 space-y-10">
+      <div className="w-full px-6 py-12 sm:px-10 lg:px-12 space-y-10 relative z-10">
         
         {/* ================= HEADER ================= */}
         <div className="flex flex-col gap-6 rounded-[28px] border-[3px] border-[#221208] bg-[#4a2512] p-8 text-[#faebd7] shadow-[10px_10px_0_rgba(34,18,8,0.3)] sm:flex-row sm:items-center sm:justify-between">
@@ -537,14 +563,30 @@ export default function GrievancesAdmin() {
                         </td>
 
                         <td className="px-5 py-4 text-right align-top">
-                          <button
-                            type="button"
-                            onClick={() => openDetails(grievance)}
-                            className="inline-flex items-center gap-2 rounded-xl border-2 border-[#221208] bg-white px-4 py-2 text-xs font-black text-[#221208] shadow-[3px_3px_0_#221208] transition hover:bg-[#e68a45]"
-                          >
-                            <Eye className="h-4 w-4" strokeWidth={2.5} />
-                            View
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() => openDetails(grievance)}
+                              className="inline-flex items-center gap-1.5 rounded-xl border-2 border-[#221208] bg-white px-3.5 py-2 text-xs font-black text-[#221208] shadow-[3px_3px_0_#221208] transition hover:bg-[#e68a45]"
+                            >
+                              <Eye className="h-4 w-4" strokeWidth={2.5} />
+                              View
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => deleteGrievance(grievance.id, grievance.ticket_number)}
+                              disabled={deletingId === grievance.id}
+                              className="inline-flex items-center justify-center rounded-xl border-2 border-[#221208] bg-red-200 p-2 text-red-900 shadow-[3px_3px_0_#221208] transition hover:bg-red-300 disabled:opacity-50"
+                              title="Delete Grievance"
+                            >
+                              {deletingId === grievance.id ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Trash2 className="h-4 w-4" strokeWidth={2.5} />
+                              )}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -585,14 +627,29 @@ export default function GrievancesAdmin() {
 
                     <div className="mt-4 flex items-center justify-between gap-3 pt-3 border-t-2 border-slate-100">
                       <StatusBadge status={grievance.status} />
-                      <button
-                        type="button"
-                        onClick={() => openDetails(grievance)}
-                        className="inline-flex items-center gap-1.5 rounded-xl border-2 border-[#221208] bg-[#faebd7] px-3.5 py-2 text-xs font-black text-[#221208] shadow-[2px_2px_0_#221208]"
-                      >
-                        <Eye className="h-4 w-4" strokeWidth={2.5} />
-                        View
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => openDetails(grievance)}
+                          className="inline-flex items-center gap-1 rounded-xl border-2 border-[#221208] bg-[#faebd7] px-3 py-2 text-xs font-black text-[#221208] shadow-[2px_2px_0_#221208]"
+                        >
+                          <Eye className="h-4 w-4" strokeWidth={2.5} />
+                          View
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deleteGrievance(grievance.id, grievance.ticket_number)}
+                          disabled={deletingId === grievance.id}
+                          className="inline-flex items-center justify-center rounded-xl border-2 border-[#221208] bg-red-200 p-2 text-red-900 shadow-[2px_2px_0_#221208] transition hover:bg-red-300 disabled:opacity-50"
+                          title="Delete Grievance"
+                        >
+                          {deletingId === grievance.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" strokeWidth={2.5} />
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -600,228 +657,228 @@ export default function GrievancesAdmin() {
             </>
           )}
         </div>
+      </div>
 
-        {/* ================= DETAILS MODAL ================= */}
-        {selectedGrievance && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-            <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border-[3px] border-[#221208] bg-[#faebd7] text-[#221208] shadow-[15px_15px_0_rgba(34,18,8,0.4)]">
-              <div className="sticky top-0 flex items-start justify-between border-b-2 border-[#221208]/20 bg-[#4a2512] px-6 py-5 text-[#faebd7]">
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-wider text-[#e68a45]">
-                    Grievance Ticket
-                  </p>
-                  <h2 className="mt-1 text-2xl font-black text-[#faebd7]">
-                    {selectedGrievance.ticket_number}
-                  </h2>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={closeDetails}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-[#221208] bg-[#faebd7] text-[#221208] shadow-[3px_3px_0_#221208] transition hover:bg-[#e68a45]"
-                  aria-label="Close grievance details"
-                >
-                  <X className="h-5 w-5" strokeWidth={2.5} />
-                </button>
+      {/* ================= DETAILS MODAL (Rendered at Root Level) ================= */}
+      {selectedGrievance && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="my-auto max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[28px] border-[3px] border-[#221208] bg-[#faebd7] text-[#221208] shadow-[15px_15px_0_rgba(34,18,8,0.4)]">
+            <div className="sticky top-0 z-10 flex items-start justify-between border-b-2 border-[#221208]/20 bg-[#4a2512] px-6 py-5 text-[#faebd7]">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-wider text-[#e68a45]">
+                  Grievance Ticket
+                </p>
+                <h2 className="mt-1 text-2xl font-black text-[#faebd7]">
+                  {selectedGrievance.ticket_number}
+                </h2>
               </div>
 
-              <div className="space-y-6 p-6 sm:p-8">
-                {/* Citizen */}
-                <div className="rounded-2xl border-2 border-[#221208] bg-white p-5 shadow-[4px_4px_0_#221208]">
-                  <div className="flex items-center gap-2">
-                    <UserRound className="h-5 w-5 text-[#4a2512]" />
-                    <h3 className="font-black text-[#221208]">
-                      Citizen information
-                    </h3>
-                  </div>
+              <button
+                type="button"
+                onClick={closeDetails}
+                className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-[#221208] bg-[#faebd7] text-[#221208] shadow-[3px_3px_0_#221208] transition hover:bg-[#e68a45]"
+                aria-label="Close grievance details"
+              >
+                <X className="h-5 w-5" strokeWidth={2.5} />
+              </button>
+            </div>
 
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2 text-xs sm:text-sm font-medium">
-                    <div>
-                      <p className="font-black text-[#5a321a]">Name</p>
-                      <p className="mt-1 font-bold text-[#221208]">
-                        {selectedGrievance.name}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="font-black text-[#5a321a]">Mobile</p>
-                      <p className="mt-1 flex items-center gap-2 font-bold text-[#221208]">
-                        <Phone className="h-4 w-4 text-[#e68a45]" />
-                        {selectedGrievance.mobile || "—"}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="font-black text-[#5a321a]">Email</p>
-                      <p className="mt-1 font-bold text-[#221208] break-all">
-                        {selectedGrievance.email || "—"}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="font-black text-[#5a321a]">Submitted</p>
-                      <p className="mt-1 font-bold text-[#221208]">
-                        {formatDate(selectedGrievance.submitted_at)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Grievance */}
-                <div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <h3 className="text-lg font-black text-[#221208]">
-                      {selectedGrievance.subject || selectedGrievance.category}
-                    </h3>
-                    <PriorityBadge priority={selectedGrievance.priority} />
-                    <StatusBadge status={selectedGrievance.status} />
-                  </div>
-
-                  <p className="mt-2 text-xs sm:text-sm font-medium text-[#5a321a]">
-                    Category: <span className="font-black text-[#221208]">{selectedGrievance.category}</span>
-                  </p>
-
-                  <div className="mt-4 rounded-2xl border-2 border-[#221208] bg-white p-5 shadow-[4px_4px_0_#221208]">
-                    <p className="whitespace-pre-wrap text-xs sm:text-sm font-medium leading-relaxed text-[#221208]">
-                      {selectedGrievance.description}
-                    </p>
-                  </div>
-
-                  {selectedGrievance.location && (
-                    <div className="mt-4 flex items-start gap-2 text-xs sm:text-sm font-bold text-[#5a321a]">
-                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#e68a45]" />
-                      <span>{selectedGrievance.location}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Management */}
-                <div className="rounded-2xl border-2 border-[#221208] bg-[#4a2512] p-6 text-[#faebd7] shadow-[6px_6px_0_#221208]">
-                  <h3 className="font-black text-base text-[#faebd7]">
-                    Manage grievance
+            <div className="space-y-6 p-6 sm:p-8">
+              {/* Citizen */}
+              <div className="rounded-2xl border-2 border-[#221208] bg-white p-5 shadow-[4px_4px_0_#221208]">
+                <div className="flex items-center gap-2">
+                  <UserRound className="h-5 w-5 text-[#4a2512]" />
+                  <h3 className="font-black text-[#221208]">
+                    Citizen information
                   </h3>
+                </div>
 
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                    <label className="block">
-                      <span className="text-xs sm:text-sm font-black text-[#eddcd2]">
-                        Status
-                      </span>
-                      <select
-                        value={editStatus}
-                        onChange={(event) =>
-                          setEditStatus(event.target.value)
-                        }
-                        className="mt-2 h-11 w-full rounded-xl border-2 border-[#221208] bg-white px-3 text-sm font-black text-[#221208] outline-none focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45] cursor-pointer"
-                      >
-                        {STATUS_OPTIONS.map((status) => (
-                          <option key={status} value={status}>
-                            {formatStatus(status)}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-
-                    <label className="block">
-                      <span className="text-xs sm:text-sm font-black text-[#eddcd2]">
-                        Priority
-                      </span>
-                      <select
-                        value={editPriority}
-                        onChange={(event) =>
-                          setEditPriority(event.target.value)
-                        }
-                        className="mt-2 h-11 w-full rounded-xl border-2 border-[#221208] bg-white px-3 text-sm font-black text-[#221208] outline-none focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45] cursor-pointer"
-                      >
-                        {PRIORITY_OPTIONS.map((priority) => (
-                          <option key={priority} value={priority}>
-                            {formatPriority(priority)}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2 text-xs sm:text-sm font-medium">
+                  <div>
+                    <p className="font-black text-[#5a321a]">Name</p>
+                    <p className="mt-1 font-bold text-[#221208]">
+                      {selectedGrievance.name}
+                    </p>
                   </div>
 
-                  <label className="mt-4 block">
-                    <span className="text-xs sm:text-sm font-black text-[#eddcd2]">
-                      Assigned staff user ID
-                    </span>
-                    <input
-                      type="text"
-                      value={editAssignedTo}
-                      onChange={(event) =>
-                        setEditAssignedTo(event.target.value)
-                      }
-                      placeholder="UUID of assigned admin/staff user"
-                      className="mt-2 h-11 w-full rounded-xl border-2 border-[#221208] bg-white px-3 text-sm font-semibold text-[#221208] outline-none focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45]"
-                    />
-                    <p className="mt-1 text-xs font-medium text-[#d4a373]">
-                      Leave blank to remove the current assignment.
+                  <div>
+                    <p className="font-black text-[#5a321a]">Mobile</p>
+                    <p className="mt-1 flex items-center gap-2 font-bold text-[#221208]">
+                      <Phone className="h-4 w-4 text-[#e68a45]" />
+                      {selectedGrievance.mobile || "—"}
                     </p>
+                  </div>
+
+                  <div>
+                    <p className="font-black text-[#5a321a]">Email</p>
+                    <p className="mt-1 font-bold text-[#221208] break-all">
+                      {selectedGrievance.email || "—"}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="font-black text-[#5a321a]">Submitted</p>
+                    <p className="mt-1 font-bold text-[#221208]">
+                      {formatDate(selectedGrievance.submitted_at)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Grievance */}
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h3 className="text-lg font-black text-[#221208]">
+                    {selectedGrievance.subject || selectedGrievance.category}
+                  </h3>
+                  <PriorityBadge priority={selectedGrievance.priority} />
+                  <StatusBadge status={selectedGrievance.status} />
+                </div>
+
+                <p className="mt-2 text-xs sm:text-sm font-medium text-[#5a321a]">
+                  Category: <span className="font-black text-[#221208]">{selectedGrievance.category}</span>
+                </p>
+
+                <div className="mt-4 rounded-2xl border-2 border-[#221208] bg-white p-5 shadow-[4px_4px_0_#221208]">
+                  <p className="whitespace-pre-wrap text-xs sm:text-sm font-medium leading-relaxed text-[#221208]">
+                    {selectedGrievance.description}
+                  </p>
+                </div>
+
+                {selectedGrievance.location && (
+                  <div className="mt-4 flex items-start gap-2 text-xs sm:text-sm font-bold text-[#5a321a]">
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#e68a45]" />
+                    <span>{selectedGrievance.location}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Management */}
+              <div className="rounded-2xl border-2 border-[#221208] bg-[#4a2512] p-6 text-[#faebd7] shadow-[6px_6px_0_#221208]">
+                <h3 className="font-black text-base text-[#faebd7]">
+                  Manage grievance
+                </h3>
+
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  <label className="block">
+                    <span className="text-xs sm:text-sm font-black text-[#eddcd2]">
+                      Status
+                    </span>
+                    <select
+                      value={editStatus}
+                      onChange={(event) =>
+                        setEditStatus(event.target.value)
+                      }
+                      className="mt-2 h-11 w-full rounded-xl border-2 border-[#221208] bg-white px-3 text-sm font-black text-[#221208] outline-none focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45] cursor-pointer"
+                    >
+                      {STATUS_OPTIONS.map((status) => (
+                        <option key={status} value={status}>
+                          {formatStatus(status)}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block">
+                    <span className="text-xs sm:text-sm font-black text-[#eddcd2]">
+                      Priority
+                    </span>
+                    <select
+                      value={editPriority}
+                      onChange={(event) =>
+                        setEditPriority(event.target.value)
+                      }
+                      className="mt-2 h-11 w-full rounded-xl border-2 border-[#221208] bg-white px-3 text-sm font-black text-[#221208] outline-none focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45] cursor-pointer"
+                    >
+                      {PRIORITY_OPTIONS.map((priority) => (
+                        <option key={priority} value={priority}>
+                          {formatPriority(priority)}
+                        </option>
+                      ))}
+                    </select>
                   </label>
                 </div>
 
-                {/* Existing timestamps */}
-                <div className="grid gap-3 text-xs sm:text-sm sm:grid-cols-3">
-                  <div className="rounded-xl border-2 border-[#221208] bg-white p-3.5 shadow-[3px_3px_0_#221208]">
-                    <p className="text-[10px] font-black uppercase tracking-wider text-[#5a321a]">
-                      Acknowledged
-                    </p>
-                    <p className="mt-1 font-bold text-[#221208]">
-                      {formatDate(selectedGrievance.acknowledged_at)}
-                    </p>
-                  </div>
+                <label className="mt-4 block">
+                  <span className="text-xs sm:text-sm font-black text-[#eddcd2]">
+                    Assigned staff user ID
+                  </span>
+                  <input
+                    type="text"
+                    value={editAssignedTo}
+                    onChange={(event) =>
+                      setEditAssignedTo(event.target.value)
+                    }
+                    placeholder="UUID of assigned admin/staff user"
+                    className="mt-2 h-11 w-full rounded-xl border-2 border-[#221208] bg-white px-3 text-sm font-semibold text-[#221208] outline-none focus:border-[#4a2512] focus:ring-2 focus:ring-[#e68a45]"
+                  />
+                  <p className="mt-1 text-xs font-medium text-[#d4a373]">
+                    Leave blank to remove the current assignment.
+                  </p>
+                </label>
+              </div>
 
-                  <div className="rounded-xl border-2 border-[#221208] bg-white p-3.5 shadow-[3px_3px_0_#221208]">
-                    <p className="text-[10px] font-black uppercase tracking-wider text-[#5a321a]">
-                      Resolved
-                    </p>
-                    <p className="mt-1 font-bold text-[#221208]">
-                      {formatDate(selectedGrievance.resolved_at)}
-                    </p>
-                  </div>
+              {/* Existing timestamps */}
+              <div className="grid gap-3 text-xs sm:text-sm sm:grid-cols-3">
+                <div className="rounded-xl border-2 border-[#221208] bg-white p-3.5 shadow-[3px_3px_0_#221208]">
+                  <p className="text-[10px] font-black uppercase tracking-wider text-[#5a321a]">
+                    Acknowledged
+                  </p>
+                  <p className="mt-1 font-bold text-[#221208]">
+                    {formatDate(selectedGrievance.acknowledged_at)}
+                  </p>
+                </div>
 
-                  <div className="rounded-xl border-2 border-[#221208] bg-white p-3.5 shadow-[3px_3px_0_#221208]">
-                    <p className="text-[10px] font-black uppercase tracking-wider text-[#5a321a]">
-                      Closed
-                    </p>
-                    <p className="mt-1 font-bold text-[#221208]">
-                      {formatDate(selectedGrievance.closed_at)}
-                    </p>
-                  </div>
+                <div className="rounded-xl border-2 border-[#221208] bg-white p-3.5 shadow-[3px_3px_0_#221208]">
+                  <p className="text-[10px] font-black uppercase tracking-wider text-[#5a321a]">
+                    Resolved
+                  </p>
+                  <p className="mt-1 font-bold text-[#221208]">
+                    {formatDate(selectedGrievance.resolved_at)}
+                  </p>
+                </div>
+
+                <div className="rounded-xl border-2 border-[#221208] bg-white p-3.5 shadow-[3px_3px_0_#221208]">
+                  <p className="text-[10px] font-black uppercase tracking-wider text-[#5a321a]">
+                    Closed
+                  </p>
+                  <p className="mt-1 font-bold text-[#221208]">
+                    {formatDate(selectedGrievance.closed_at)}
+                  </p>
                 </div>
               </div>
+            </div>
 
-              {/* Modal footer */}
-              <div className="sticky bottom-0 flex flex-col-reverse gap-3 border-t-2 border-[#221208]/20 bg-[#faebd7] px-6 py-4 sm:flex-row sm:justify-end">
-                <button
-                  type="button"
-                  onClick={closeDetails}
-                  disabled={Boolean(savingId)}
-                  className="rounded-xl border-2 border-[#221208] bg-white px-6 py-3 text-xs font-black text-[#221208] shadow-[3px_3px_0_#221208] transition hover:bg-slate-100 disabled:opacity-60"
-                >
-                  Cancel
-                </button>
+            {/* Modal footer */}
+            <div className="sticky bottom-0 z-10 flex flex-col-reverse gap-3 border-t-2 border-[#221208]/20 bg-[#faebd7] px-6 py-4 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={closeDetails}
+                disabled={Boolean(savingId)}
+                className="rounded-xl border-2 border-[#221208] bg-white px-6 py-3 text-xs font-black text-[#221208] shadow-[3px_3px_0_#221208] transition hover:bg-slate-100 disabled:opacity-60"
+              >
+                Cancel
+              </button>
 
-                <button
-                  type="button"
-                  onClick={saveChanges}
-                  disabled={Boolean(savingId)}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#221208] bg-[#e68a45] px-8 py-3 text-xs font-black text-[#221208] shadow-[4px_4px_0_#221208] transition hover:bg-[#f4a261] disabled:opacity-60"
-                >
-                  {savingId ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    "Save Changes"
-                  )}
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={saveChanges}
+                disabled={Boolean(savingId)}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#221208] bg-[#e68a45] px-8 py-3 text-xs font-black text-[#221208] shadow-[4px_4px_0_#221208] transition hover:bg-[#f4a261] disabled:opacity-60"
+              >
+                {savingId ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -53,7 +53,7 @@ export async function verifyEmailTransport() {
 |--------------------------------------------------------------------------
 */
 
-async function sendEmail({ to, subject, text, html }) {
+export async function sendEmail({ to, subject, text, html }) {
   if (!transporter) {
     console.warn("⚠️ SMTP is not configured.");
     console.warn("Email was NOT sent.");
@@ -90,6 +90,75 @@ async function sendEmail({ to, subject, text, html }) {
       "Unable to send email. Please try again later."
     );
   }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Grievance Submission Confirmation Email
+|--------------------------------------------------------------------------
+*/
+
+export async function sendGrievanceConfirmation(email, name, ticketNumber, category) {
+  const subject = `[PalitpurConnect] Grievance Submitted - Ticket #${ticketNumber}`;
+
+  const text = `
+Hello ${name},
+
+Your grievance regarding "${category}" has been successfully submitted.
+
+Your Ticket Number is: ${ticketNumber}
+
+You can track the status of your grievance anytime on PalitpurConnect using this ticket number.
+
+Regards,
+PalitpurConnect Team
+  `.trim();
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Grievance Submitted</title>
+</head>
+<body style="margin:0; padding:0; background:#f1f5f9; font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:600px; margin:40px auto; background:#ffffff; border-radius:16px; overflow:hidden; border:1px solid #e2e8f0;">
+    <div style="padding:28px; background:#4a2512; color:#faebd7; text-align:center;">
+      <h1 style="margin:0;">PalitpurConnect</h1>
+      <p style="margin:8px 0 0;">Digital Village Portal</p>
+    </div>
+    <div style="padding:32px;">
+      <h2 style="margin-top:0; color:#221208;">Grievance Submitted Successfully</h2>
+      <p style="color:#5a321a; line-height:1.6;">
+        Hello <strong>${name}</strong>,<br>
+        Your grievance regarding <strong>${category}</strong> has been received by the administration.
+      </p>
+      <div style="margin:28px 0; padding:20px; text-align:center; background:#faebd7; border:2px solid #221208; border-radius:12px;">
+        <div style="font-size:12px; color:#5a321a; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; font-weight:black;">
+          Your Ticket Number
+        </div>
+        <div style="font-size:30px; font-weight:black; letter-spacing:4px; color:#4a2512; font-family:monospace;">
+          ${ticketNumber}
+        </div>
+      </div>
+      <p style="color:#5a321a; font-size:14px; line-height:1.6;">
+        You can use this ticket number to track your progress on the portal.
+      </p>
+    </div>
+    <div style="padding:20px 32px; background:#f8fafc; color:#94a3b8; font-size:12px; text-align:center;">
+      © ${new Date().getFullYear()} PalitpurConnect
+    </div>
+  </div>
+</body>
+</html>
+  `.trim();
+
+  return sendEmail({
+    to: email,
+    subject,
+    text,
+    html,
+  });
 }
 
 /*

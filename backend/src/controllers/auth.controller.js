@@ -4,6 +4,7 @@ import {
   loginUser,
 } from "../services/auth.service.js";
 import { hashOtp } from "../utils/otp.js";
+import passport from "passport";
 
 /*
 |--------------------------------------------------------------------------
@@ -250,6 +251,11 @@ export async function me(req, res, next) {
 
 export async function logout(req, res, next) {
   try {
+    if (req.logout) {
+      req.logout((err) => {
+        if (err) return next(err);
+      });
+    }
     return res.status(200).json({
       success: true,
       message: "Logout successful",
@@ -298,3 +304,56 @@ export async function getAllUsersAdmin(req, res, next) {
     next(error);
   }
 }
+
+/*
+|--------------------------------------------------------------------------
+| Google OAuth Handlers
+|--------------------------------------------------------------------------
+*/
+
+export const googleAuthRedirect = passport.authenticate("google", {
+  scope: ["profile", "email"],
+});
+
+export const googleAuthCallback = (req, res, next) => {
+  passport.authenticate(
+    "google",
+    {
+      failureRedirect: `${process.env.CLIENT_URL || "http://localhost:5173"}/login?error=GoogleAuthFailed`,
+    },
+    (err, user, info) => {
+      console.log("========== GOOGLE CALLBACK ==========");
+      console.log("ERR:", err);
+      console.log("USER:", user);
+      console.log("INFO:", info);
+      console.log("SESSION:", req.session);
+      console.log("=====================================");
+
+      if (err || !user) {
+        return res.redirect(
+          `${process.env.CLIENT_URL || "http://localhost:5173"}/login?error=GoogleAuthFailed`
+        );
+      }
+
+      req.logIn(user, (loginErr) => {
+        if (loginErr) {
+          console.error("Google req.logIn error:", loginErr);
+          return next(loginErr);
+        }
+
+        req.session.save((saveErr) => {
+          if (saveErr) {
+            console.error("Google session save error:", saveErr);
+            return next(saveErr);
+          }
+
+          console.log("✅ Google login successful:", req.user);
+
+          return res.redirect(
+            `${process.env.CLIENT_URL || "http://localhost:5173"}/dashboard`
+          );
+        });
+      });
+    }
+  )(req, res, next);
+};

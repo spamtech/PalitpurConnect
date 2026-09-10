@@ -7,6 +7,8 @@ import {
   me,
   logout,
   getAllUsersAdmin,
+  googleAuthRedirect,
+  googleAuthCallback,
 } from "../controllers/auth.controller.js";
 
 import { authenticate, isAdmin } from "../middleware/auth.middleware.js";
@@ -44,6 +46,22 @@ router.post(
 router.post(
   "/login",
   login
+);
+
+/*
+|--------------------------------------------------------------------------
+| Google OAuth Authentication
+|--------------------------------------------------------------------------
+*/
+
+router.get(
+  "/google",
+  googleAuthRedirect
+);
+
+router.get(
+  "/google/callback",
+  googleAuthCallback
 );
 
 /*

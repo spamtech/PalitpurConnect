@@ -57,7 +57,7 @@ export default function CitizenFooter() {
             <div className="mt-5 flex items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-lg border-2 border-[#173528] bg-[#2d684d] px-3 py-1 text-[11px] font-black text-[#f7f0d0] shadow-[2px_2px_0_#0c2218]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#b8d85a] animate-pulse shrink-0" />
-                যাচাইকৃত পোর্টাল
+                গ্রাম যাচাইকৃত পোর্টাল
               </span>
             </div>
           </div>
@@ -125,7 +125,7 @@ export default function CitizenFooter() {
               <ul className="mt-5 space-y-3.5 text-sm font-bold text-[#dfe8c4]">
                 <li className="flex items-start gap-3">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-[#f7f0d0]/20 bg-[#173528]/50 text-[#b8d85a]"><MapPin size={16} /></div>
-                  <span className="leading-snug text-xs">পালিতপুর গ্রাম অফিস, পোস্ট ও ব্লক: পালিতপুর, বীরভূম, পশ্চিমবঙ্গ - ৭৩১২০১</span>
+                  <span className="leading-snug text-xs">পালিতপুর গ্রাম, পোস্ট: নুতনহাট ও ব্লক: নানুর  , বীরভূম, পশ্চিমবঙ্গ - ৭১৩১৪৭</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-[#f7f0d0]/20 bg-[#173528]/50 text-[#b8d85a]"><Phone size={16} /></div>

@@ -357,7 +357,7 @@ export default function CitizenDashboard() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-relaxed text-[#dfe8c4] sm:text-lg font-medium">
-                পালিতপুরকানেক্ট স্থানীয় সরকারের পরিষেবা, ঘোষণা, পাবলিক ডিরেক্টরি, জরুরি যোগাযোগ এবং নাগরিকের অভিযোগগুলিকে আশীর্বাদপুষ্ট কমিউনিটি হারমনি এবং কৃষি সমৃদ্ধির অধীনে একটি প্রাণবন্ত ডিজিটাল প্ল্যাটফর্মে একত্রিত করে।
+                পালিতপুর কানেক্ট স্থানীয় সরকারের পরিষেবা, ঘোষণা, পাবলিক ডিরেক্টরি, জরুরি যোগাযোগ এবং নাগরিকের অভিযোগগুলিকে আশীর্বাদপুষ্ট কমিউনিটি হারমনি এবং কৃষি সমৃদ্ধির অধীনে একটি প্রাণবন্ত ডিজিটাল প্ল্যাটফর্মে একত্রিত করে।
               </p>
 
               {/* Trust Points */}
@@ -366,7 +366,7 @@ export default function CitizenDashboard() {
                   <span className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#173528] bg-[#b8d85a] text-[#173528]">
                     <CheckCircle2 size={17} strokeWidth={2.5} />
                   </span>
-                  পঞ্চায়েত যাচাইকৃত তথ্য
+                 গ্রাম  যাচাইকৃত তথ্য
                 </div>
 
                 <div className="flex items-center gap-3 text-sm font-bold text-[#f7f0d0] bg-[#2d684d] p-3.5 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">

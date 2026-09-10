@@ -5,13 +5,22 @@ export default function Spinner({
   label = "Loading",
   className = "",
 }) {
+  const sizeMap = {
+    sm: 16,
+    md: 20,
+    lg: 32,
+    xl: 48,
+  };
+
+  const iconSize = typeof size === "number" ? size : (sizeMap[size] || 20);
+
   return (
     <span
       className={`inline-flex items-center justify-center ${className}`}
       role="status"
       aria-label={label}
     >
-      <Loader2 size={size} className="animate-spin text-emerald-600" />
+      <Loader2 size={iconSize} className="animate-spin text-emerald-600" />
       <span className="sr-only">{label}</span>
     </span>
   );

@@ -130,7 +130,7 @@ export default function DirectoryPage() {
             <div className="max-w-3xl">
               <div className="mb-4 inline-flex items-center gap-2 rounded-xl border-[2px] border-[#0c2218] bg-[#f7f0d0] px-4 py-1.5 text-xs font-black text-[#173528] shadow-[4px_4px_0_#0c2218] uppercase tracking-wider">
                 <span className="h-2.5 w-2.5 rounded-full bg-[#b8d85a] animate-pulse" />
-                <span>পালিতপুরকানেক্ট</span>
+                <span>পালিতপুর কানেক্ট</span>
                 <span className="text-[#b07820]">•</span>
                 <span>পরিষেবা ডিরেক্টরি</span>
               </div>
@@ -143,14 +143,14 @@ export default function DirectoryPage() {
               </h1>
 
               <p className="mt-4 text-base leading-relaxed text-[#dfe8c4] sm:text-lg font-medium">
-                পালিতপুরকানেক্ট স্থানীয় সরকারি অফিস, জনসেবা, প্রয়োজনীয় সুবিধা এবং সম্প্রদায়ের যোগাযোগগুলিকে একটি প্রাণবন্ত ডিজিটাল প্ল্যাটফর্মে একত্রিত করেছে।
+                পালিতপুর কানেক্ট স্থানীয় সরকারি অফিস, জনসেবা, প্রয়োজনীয় সুবিধা এবং সম্প্রদায়ের যোগাযোগগুলিকে একটি প্রাণবন্ত ডিজিটাল প্ল্যাটফর্মে একত্রিত করেছে।
               </p>
 
               {/* Trust Points */}
               <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="flex items-center gap-2.5 text-xs font-bold text-[#f7f0d0] bg-[#2d684d] p-3 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-[#173528] bg-[#b8d85a] text-[#173528] font-black">✓</span>
-                  পঞ্চায়েত যাচাইকৃত
+                  গ্রাম যাচাইকৃত
                 </div>
                 <div className="flex items-center gap-2.5 text-xs font-bold text-[#f7f0d0] bg-[#2d684d] p-3 rounded-2xl border-[2px] border-[#0c2218] shadow-[4px_4px_0_#0c2218]">
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-[#173528] bg-[#b8d85a] text-[#173528] font-black">✓</span>

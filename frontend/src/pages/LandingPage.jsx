@@ -781,7 +781,7 @@ function Villages({ data = {} }) {
             <div className="lg:col-span-5">
               <div className="rounded-2xl border-[2px] border-[#0c2218] bg-[#2d684d] p-6 text-[#f7f0d0] shadow-[6px_6px_0_#0c2218]">
                 <p className="text-[10px] font-black uppercase tracking-wider text-[#e6ad45]">ডাক অঞ্চল</p>
-                <p className="mt-1 text-xl font-black text-[#f7f0d0]">বীরভূম • ৭১৩১৪৭</p>
+                <p className="mt-1 text-xl font-black text-[#f7f0d0]"> নুতনহাট • ৭১৩১৪৭</p>
                 <p className="mt-2 text-xs font-medium leading-relaxed text-[#dfe8c4]">
                   পালিতপুর পশ্চিমবঙ্গের বীরভূম জেলায় অবস্থিত, চারপাশে ধানখেত এবং গ্রামীণ রাস্তা দিয়ে নিকটবর্তী শহরগুলির সাথে সংযুক্ত।
                 </p>
@@ -925,10 +925,10 @@ const MAP_EMBED = `https://www.google.com/maps?q=${MAP_QUERY}&output=embed`;
 const MAP_LINK = `https://www.google.com/maps/search/?api=1&query=${MAP_QUERY}`;
 
 const PLACES = [
-  { label: "পঞ্চায়েত অফিস", icon: ShieldCheck, description: "নাগরিক প্রশাসন" },
+  { label: "পালিতপুর পল্লীমঙ্গল সমিতি", icon: ShieldCheck, description: "ক্লাব" },
   { label: "স্বাস্থ্যকেন্দ্র", icon: Users, description: "স্বাস্থ্যসেবা" },
-  { label: "বিদ্যালয়", icon: Compass, description: "শিক্ষা ও পাঠ" },
-  { label: "কৃষি সেবা", icon: Sparkles, description: "কৃষি সহায়তা" },
+  { label: "প্রাথমিক বিদ্যালয়", icon: Compass, description: "শিক্ষা ও পাঠ" },
+  { label: "হনুমান মন্দির", icon: Sparkles, description: "মন্দির" },
 ];
 
 function MapSection() {

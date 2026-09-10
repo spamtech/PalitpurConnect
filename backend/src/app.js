@@ -1,13 +1,17 @@
+
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import path from "path"; // <-- 1. Import path for static folders
-import { fileURLToPath } from "url"; // <-- 2. Needed for ESM __dirname resolution
+import session from "express-session";
+import passport from "passport";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import { env } from "./config/env.js";
 import { testDatabaseConnection } from "./config/database.js";
+import "./config/passport.js"; // Initialize passport configuration
 
 import routes from "./routes/index.js";
 
@@ -30,22 +34,34 @@ const app = express();
 
 app.use(
   helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginResourcePolicy: {
+      policy: "cross-origin",
+    },
     crossOriginEmbedderPolicy: false,
     contentSecurityPolicy: false,
   })
 );
 
+/*
+|--------------------------------------------------------------------------
+| CORS
+|--------------------------------------------------------------------------
+*/
+
 app.use(
   cors({
-    origin: [env.clientUrl, "https://palitpurconnect-frontend.onrender.com", "http://localhost:5173"],
+    origin: [
+      env.clientUrl,
+      "https://palitpurconnect-frontend.onrender.com",
+      "http://localhost:5173",
+    ],
     credentials: true,
   })
 );
 
 /*
 |--------------------------------------------------------------------------
-| Body Parsing
+| Body Parsing & Cookies
 |--------------------------------------------------------------------------
 */
 
@@ -66,18 +82,62 @@ app.use(cookieParser());
 
 /*
 |--------------------------------------------------------------------------
-| Static Uploads (Added for Admin Device Image Uploads)
+| Session
 |--------------------------------------------------------------------------
 */
-// Go up one level from src/ to backend/ and access /uploads
+
+app.use(
+  session({
+    secret:
+      process.env.SESSION_SECRET || "fallback_secret_key",
+
+    resave: false,
+
+    saveUninitialized: false,
+
+    cookie: {
+      httpOnly: true,
+
+      secure: env.nodeEnv === "production",
+
+      sameSite:
+        env.nodeEnv === "production"
+          ? "none"
+          : "lax",
+
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    },
+  })
+);
+
+/*
+|--------------------------------------------------------------------------
+| Passport
+|--------------------------------------------------------------------------
+*/
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+/*
+|--------------------------------------------------------------------------
+| Static Uploads
+|--------------------------------------------------------------------------
+*/
+
 app.use(
   "/uploads",
   (req, res, next) => {
-    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    res.setHeader(
+      "Cross-Origin-Resource-Policy",
+      "cross-origin"
+    );
+
     next();
   },
   express.static(path.join(__dirname, "uploads"))
 );
+
 /*
 |--------------------------------------------------------------------------
 | Logging
@@ -146,6 +206,25 @@ app.get("/api/v1/health", async (req, res) => {
 
 /*
 |--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+|
+| Google OAuth is handled inside:
+|
+| src/routes/auth.routes.js
+|
+| These routes are mounted below:
+|
+| GET  /api/v1/auth/google
+| GET  /api/v1/auth/google/callback
+|
+| Do NOT define /auth/google or /auth/google/callback here.
+|
+|--------------------------------------------------------------------------
+*/
+
+/*
+|--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
 */
@@ -169,3 +248,4 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 export default app;
+

@@ -114,7 +114,7 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <section className="min-h-screen bg-[#361a0d] text-[#faebd7] relative isolate overflow-hidden">
+    <div className="min-h-screen w-full bg-[#361a0d] text-[#faebd7] p-6 sm:p-8 lg:p-10 relative isolate overflow-hidden">
       {/* Retro ambient background */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#e68a45]/10 blur-3xl" />
@@ -123,16 +123,16 @@ export default function AdminDashboard() {
         <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(#faebd7_1px,transparent_1px)] [background-size:12px_12px]" />
       </div>
 
-      <div className="mx-auto max-w-[1600px] px-6 py-12 sm:px-10 lg:px-12">
+      <div className="w-full">
         {/* Header */}
-        <div className="mb-10 rounded-[28px] border-[3px] border-[#221208] bg-[#4a2512] p-8 text-[#faebd7] shadow-[10px_10px_0_rgba(34,18,8,0.3)]">
+        <div className="mb-8 rounded-[28px] border-[3px] border-[#221208] bg-[#4a2512] p-8 text-[#faebd7] shadow-[10px_10px_0_rgba(34,18,8,0.3)]">
           <div className="inline-flex items-center gap-2 rounded-xl border-[2px] border-[#221208] bg-[#faebd7] px-4 py-1.5 text-xs font-black text-[#221208] shadow-[3px_3px_0_#221208] uppercase tracking-wider mb-4">
             <Sparkles size={14} className="text-[#e68a45]" />
             <span>Administration Portal 🛡️</span>
           </div>
 
           <h1 className="text-3xl font-black tracking-tight text-[#faebd7] sm:text-5xl">
-            Panchayat Dashboard
+            Village Dashboard
           </h1>
 
           <p className="mt-3 text-sm sm:text-base font-medium leading-relaxed text-[#eddcd2]">
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Management Section */}
-        <div className="mt-12">
+        <div className="mt-10">
           <h2 className="text-2xl font-black tracking-tight text-[#faebd7] mb-6">
             Management Controls ⚡
           </h2>
@@ -216,6 +216,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

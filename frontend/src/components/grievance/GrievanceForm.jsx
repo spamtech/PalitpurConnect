@@ -21,6 +21,7 @@ import { api } from "../../services/api";
 ========================================================= */
 const initialForm = {
   name: "",
+  email: "",
   mobile: "",
   category: "",
   description: "",
@@ -42,6 +43,7 @@ const categories = [
 function validateForm(form) {
   const errors = {};
   const name = form.name.trim();
+  const email = form.email.trim();
   const mobile = form.mobile.trim();
   const description = form.description.trim();
 
@@ -53,10 +55,16 @@ function validateForm(form) {
     errors.name = "নাম ১৫০ অক্ষরের বেশি হতে পারবে না।";
   }
 
+  if (!email) {
+    errors.email = "দয়া করে আপনার ইমেল ঠিকানা লিখুন।";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errors.email = "একটি সঠিক ইমেল ঠিকানা লিখুন।";
+  }
+
   if (!mobile) {
     errors.mobile = "দয়া করে আপনার মোবাইল নম্বর লিখুন।";
   } else if (!/^[6-9]\d{9}$/.test(mobile)) {
-    errors.mobile = "একটি সঠিক ১০-সংखाর ভারতীয় মোবাইল নম্বর লিখুন।";
+    errors.mobile = "একটি সঠিক ১০-সংখ্যার ভারতীয় মোবাইল নম্বর লিখুন।";
   }
 
   if (!form.category) {
@@ -144,8 +152,8 @@ function SuccessState({ ticketNumber, onNewReport }) {
         </h3>
 
         <p className="mx-auto mt-3 max-w-xl text-sm font-medium leading-relaxed text-[#42604e]">
-          আপনার নাগরিক সমস্যাটি নিরাপদে পালিতপুর পঞ্চায়েত পোর্টালে নিবন্ধিত হয়েছে।
-          অবস্থা ট্র্যাকিংয়ের জন্য আপনার রেফারেন্স নম্বরটি সুরক্ষিত রাখুন।
+          আপনার নাগরিক সমস্যাটি নিরাপদে পালিতপুর পঞ্চায়েত পোর্টালে নিবন্ধিত হয়েছে এবং আপনার ইমেলে টিকেট নম্বর পাঠানো হয়েছে।
+          অবস্থা ট্র্যাকিংয়ের জন্য আপনার রেফারেন্স নম্বরটি সুরক্ষিত রাখুন।
         </p>
 
         {/* Ticket number box */}
@@ -165,7 +173,7 @@ function SuccessState({ ticketNumber, onNewReport }) {
 
         {/* Info chips */}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
-          {["📧 এসএমএস নিশ্চিতকরণ পাঠানো হয়েছে", "🔔 মোবাইলের মাধ্যমে আপডেট", "📋 যেকোনো সময় ট্র্যাক করুন"].map((item) => (
+          {["📧 ইমেল নিশ্চিতকরণ পাঠানো হয়েছে", "🔔 মোবাইলের মাধ্যমে আপডেট", "📋 যেকোনো সময় ট্র্যাক করুন"].map((item) => (
             <span
               key={item}
               className="rounded-xl border-2 border-[#0c2218] bg-[#2d684d] px-3.5 py-1 text-xs font-black text-[#f7f0d0] shadow-[3px_3px_0_#0c2218]"
@@ -229,6 +237,7 @@ export default function GrievanceForm() {
     try {
       const response = await api.submitGrievance({
         name: form.name.trim(),
+        email: form.email.trim(),
         mobile: form.mobile.trim(),
         category: form.category,
         description: form.description.trim(),
@@ -243,6 +252,7 @@ export default function GrievanceForm() {
       const localRecord = {
         ticketNumber: serverTicket,
         name: form.name.trim(),
+        email: form.email.trim(),
         mobile: form.mobile.trim(),
         category: form.category,
         description: form.description.trim(),
@@ -287,7 +297,7 @@ export default function GrievanceForm() {
       setTrackedGrievance(grievance);
     } catch (error) {
       console.error("Tracking failed:", error);
-      let message = "এই টিকেট নম্বর দিয়ে কোনো অভিযোগ খুঁজে পাওয়া যায়নি।";
+      let message = "এই টিকেট নম্বর দিয়ে কোনো অভিযোগ খুঁজে পাওয়া যায়নি।";
       if (error?.message) message = error.message;
       setTrackError(message);
     } finally {
@@ -367,9 +377,9 @@ export default function GrievanceForm() {
           {/* Stats row */}
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             {[
-              { icon: "✅", label: "সমাধানকৃত সমস্যা", value: "১,২৪০+" },
+              { icon: "✅", label: "সমাধানকৃত সমস্যা", value: "১৪০+" },
               { icon: "⚡", label: "গড় প্রতিক্রিয়া", value: "৪৮ ঘণ্টা" },
-              { icon: "🏘️", label: "আচ্ছাদিত গ্রাম", value: "১২" },
+              { icon: "🏘️", label: "আচ্ছাদিত গ্রাম", value: "১" },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -425,7 +435,7 @@ export default function GrievanceForm() {
 
               {/* Form body */}
               <form onSubmit={handleSubmit} noValidate className="space-y-6 p-6 sm:p-8">
-                {/* Name + Mobile */}
+                {/* Name + Email + Mobile */}
                 <div className="grid gap-5 sm:grid-cols-2">
                   <Input
                     label="আপনার নাম"
@@ -437,6 +447,20 @@ export default function GrievanceForm() {
                     required
                     error={errors.name}
                   />
+                  <Input
+                    label="ইমেল ঠিকানা"
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => updateField("email", e.target.value)}
+                    placeholder="ticket@example.com"
+                    autoComplete="email"
+                    required
+                    error={errors.email}
+                  />
+                </div>
+
+                <div>
                   <Input
                     label="মোবাইল নম্বর"
                     name="mobile"
@@ -527,7 +551,7 @@ export default function GrievanceForm() {
                     </p>
                     {form.description.length >= 10 && (
                       <span className="flex items-center gap-1 text-xs font-black text-[#2d684d]">
-                        <CheckCircle2 size={12} /> যথেষ্ট বিবরণ দেওয়া হয়েছে
+                        <CheckCircle2 size={12} /> যথেষ্ট বিবরণ দেওয়া হয়েছে
                       </span>
                     )}
                   </div>
@@ -540,7 +564,7 @@ export default function GrievanceForm() {
                   </div>
                   <p className="text-xs font-medium leading-relaxed text-[#dfe8c4]">
                     <span className="font-black text-[#f7f0d0]">আপনার তথ্য নিরাপদ।</span>{" "}
-                    আপনার তথ্য সুরক্ষিত এবং কঠোরভাবে এই নাগরিক অনুরোধ প্রক্রিয়াকরণ এবং স্ট্যাটাস আপডেট প্রদানের জন্য ব্যবহৃত হয়।
+                    আপনার তথ্য সুরক্ষিত এবং কঠোরভাবে এই নাগরিক অনুরোধ প্রক্রিয়াকরণ এবং ইমেল স্ট্যাটাস আপডেট প্রদানের জন্য ব্যবহৃত হয়।
                   </p>
                 </div>
 
