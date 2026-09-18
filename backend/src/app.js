@@ -25,6 +25,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+app.set("trust proxy", 1);
 
 /*
 |--------------------------------------------------------------------------
@@ -50,15 +51,10 @@ app.use(
 
 app.use(
   cors({
-    origin: [
-      env.clientUrl,
-      "https://palitpurconnect-frontend.onrender.com",
-      "http://localhost:5173",
-    ],
+    origin: "https://palitpurconnect-frontend.onrender.com",
     credentials: true,
   })
 );
-
 /*
 |--------------------------------------------------------------------------
 | Body Parsing & Cookies
@@ -88,8 +84,7 @@ app.use(cookieParser());
 
 app.use(
   session({
-    secret:
-      process.env.SESSION_SECRET || "fallback_secret_key",
+    secret: process.env.SESSION_SECRET,
 
     resave: false,
 
@@ -97,15 +92,9 @@ app.use(
 
     cookie: {
       httpOnly: true,
-
-      secure: env.nodeEnv === "production",
-
-      sameSite:
-        env.nodeEnv === "production"
-          ? "none"
-          : "lax",
-
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     },
   })
 );
